@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>住院护理不良事件上报与根因辅助分析原型系统 · 总体方案与数据库设计（图件预览）</title>
+<style>
+  :root{--primary:#1f5f8b;--primary-dark:#15405f;--ink:#23303a;--muted:#5b6b78;--line:#dbe3ea;--bg:#f5f7fa;--panel:#fff;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Microsoft YaHei","PingFang SC","SimSun",sans-serif;color:var(--ink);background:var(--bg);line-height:1.75;font-size:15px;}
+  .page{max-width:1040px;margin:0 auto;background:var(--panel);padding:48px 56px;box-shadow:0 2px 18px rgba(20,40,60,.08);}
+  header.doc-cover{text-align:center;padding:40px 20px 30px;border-bottom:3px solid var(--primary);margin-bottom:30px;}
+  header.doc-cover .tag{display:inline-block;background:var(--primary);color:#fff;padding:4px 14px;border-radius:14px;font-size:13px;letter-spacing:2px;margin-bottom:14px;}
+  header.doc-cover h1{font-size:25px;margin:8px 0 6px;color:var(--primary-dark);line-height:1.4;}
+  header.doc-cover .sub{font-size:14px;color:var(--muted);margin-bottom:16px;}
+  h2.sec{font-size:21px;color:var(--primary-dark);border-left:5px solid var(--primary);padding-left:12px;margin:38px 0 14px;}
+  .fig{background:#fbfdfe;border:1px solid var(--line);border-radius:10px;padding:14px;margin:16px 0;}
+  .fig svg{width:100%;height:auto;display:block;}
+  .figcap{font-size:12.5px;color:var(--muted);margin-top:6px;}
+  .callout{border-left:4px solid #f0c36d;background:#fff6e6;padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:14px;}
+  .callout b{color:#a45c00;}
+  .card{display:flex;gap:16px;flex-wrap:wrap;margin:16px 0;}
+  .card .item{flex:1;min-width:280px;border:1px solid var(--line);border-radius:10px;padding:14px 18px;background:#fbfdfe;}
+  .card .item h3{margin:0 0 6px;font-size:16px;color:var(--primary-dark);}
+  .card .item p{margin:4px 0;font-size:13.5px;color:var(--muted);}
+  .foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);}
+  a{color:var(--primary);}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="doc-cover">
+    <span class="tag">医学信息课程设计 · 图件预览</span>
+    <h1>总体方案与数据库设计</h1>
+    <div class="sub">住院护理不良事件上报与根因辅助分析原型系统</div>
+    <div class="sub" style="color:#a45c00;">⚠ 仅用于教学模拟，不连接真实临床数据，不用于临床。</div>
+  </header>
+
+  <div class="card">
+    <div class="item">
+      <h3>📐 总体方案（详细）</h3>
+      <p>系统定位、五层架构、技术栈理由、功能模块划分、关键 RESTful 接口、权限安全设计（含数据范围隔离伪代码）、RCA 与统计实现、部署环境。</p>
+      <p>→ 见 <b>doc/总体方案.md</b></p>
+    </div>
+    <div class="item">
+      <h3>🗄️ 数据库设计（详细）</h3>
+      <p>设计原则、E-R 图、9 张表字段级结构、外键关系、字典初始化数据、脱敏存储说明，与建库脚本逐列对应。</p>
+      <p>→ 见 <b>doc/数据库设计.md</b> / <b>sql/01_init.sql</b></p>
+    </div>
+  </div>
+
+  <h2 class="sec">一、总体技术架构图</h2>
+  <div class="fig">
+    <svg viewBox="0 0 920 600" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+      <defs>
+        <marker id="ad" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+          <path d="M0,0 L8,3 L0,6 Z" fill="#5b6b78"/>
+        </marker>
+      </defs>
+      <style>
+        .t{fill:#15405f;font-size:19px;font-weight:700;}
+        .band{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.6;}
+        .bandh{fill:#1f5f8b;}
+        .bandht{fill:#ffffff;font-size:14px;font-weight:700;}
+        .tech{fill:#15405f;font-size:12.5px;}
+        .ln{stroke:#7c8b98;stroke-width:1.6;fill:none;marker-end:url(#ad);}
+        .side{fill:#fff6e6;stroke:#f0c36d;stroke-width:1.6;}
+        .sidet{fill:#a45c00;font-size:13px;font-weight:700;}
+        .sideb{fill:#a45c00;font-size:11.5px;}
+        .clk{fill:#e8f0f5;stroke:#2e8b9e;stroke-width:1.5;}
+        .clkt{fill:#15405f;font-size:13px;font-weight:600;}
+      </style>
+      <text x="460" y="30" text-anchor="middle" class="t">总体技术架构图（前后端分离 B/S 架构）</text>
+      <rect x="300" y="44" width="320" height="40" rx="8" class="clk"/>
+      <text x="460" y="69" text-anchor="middle" class="clkt">浏览器客户端（Web 单页应用）</text>
+      <rect x="120" y="104" width="560" height="62" rx="8" class="band"/>
+      <rect x="120" y="104" width="150" height="62" rx="8" class="bandh"/><text x="195" y="140" text-anchor="middle" class="bandht">表现层</text>
+      <text x="300" y="132" class="tech">Vue3 + Vite + Element Plus + Pinia + Axios</text>
+      <text x="300" y="152" class="tech">ECharts 图表 / 表单必填校验 / 脱敏展示</text>
+      <rect x="120" y="184" width="560" height="62" rx="8" class="band"/>
+      <rect x="120" y="184" width="150" height="62" rx="8" class="bandh"/><text x="195" y="220" text-anchor="middle" class="bandht">控制层</text>
+      <text x="300" y="212" class="tech">Spring Boot Controller（RESTful API）</text>
+      <text x="300" y="232" class="tech">JWT 鉴权 / 参数校验 / 统一响应</text>
+      <rect x="120" y="264" width="560" height="62" rx="8" class="band"/>
+      <rect x="120" y="264" width="150" height="62" rx="8" class="bandh"/><text x="195" y="300" text-anchor="middle" class="bandht">业务/安全层</text>
+      <text x="300" y="292" class="tech">Service + Spring Security</text>
+      <text x="300" y="312" class="tech">RBAC 判定 / 数据范围隔离 / 匿名脱敏 / AOP 审计</text>
+      <rect x="120" y="344" width="560" height="62" rx="8" class="band"/>
+      <rect x="120" y="344" width="150" height="62" rx="8" class="bandh"/><text x="195" y="380" text-anchor="middle" class="bandht">持久层</text>
+      <text x="300" y="372" class="tech">MyBatis-Plus</text>
+      <text x="300" y="392" class="tech">表映射 / 分页 / 条件构造器</text>
+      <rect x="120" y="424" width="560" height="62" rx="8" class="band"/>
+      <rect x="120" y="424" width="150" height="62" rx="8" class="bandh"/><text x="195" y="460" text-anchor="middle" class="bandht">存储层</text>
+      <text x="300" y="452" class="tech">MySQL 8.0</text>
+      <text x="300" y="472" class="tech">9 张表：用户/患者/事件主表/分级字典/诱因/RCA/审计/科室/类型字典</text>
+      <rect x="700" y="104" width="200" height="382" rx="10" class="side"/>
+      <text x="800" y="132" text-anchor="middle" class="sidet">横切关注点</text>
+      <text x="800" y="166" text-anchor="middle" class="sideb">安全与审计（贯穿全层）</text>
+      <text x="800" y="212" text-anchor="middle" class="sideb">· 身份认证 JWT</text>
+      <text x="800" y="248" text-anchor="middle" class="sideb">· 角色权限 RBAC</text>
+      <text x="800" y="284" text-anchor="middle" class="sideb">· 数据范围隔离</text>
+      <text x="800" y="320" text-anchor="middle" class="sideb">· 匿名上报通道</text>
+      <text x="800" y="356" text-anchor="middle" class="sideb">· 患者信息脱敏</text>
+      <text x="800" y="392" text-anchor="middle" class="sideb">· AOP 全操作审计</text>
+      <text x="800" y="428" text-anchor="middle" class="sideb">· 防越权/防篡改</text>
+      <path d="M460,84 L460,104" class="ln"/>
+      <path d="M400,166 L400,184" class="ln"/>
+      <path d="M400,246 L400,264" class="ln"/>
+      <path d="M400,326 L400,344" class="ln"/>
+      <path d="M400,406 L400,424" class="ln"/>
+    </svg>
+    <div class="figcap">图 1 总体技术架构：浏览器客户端 → 五层后端 → MySQL；右侧为贯穿全层的横切安全审计。</div>
+  </div>
+
+  <h2 class="sec">二、E-R 图（数据库设计）</h2>
+  <div class="fig">
+    <svg viewBox="0 0 1040 720" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+      <style>
+        .ent{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.8;}
+        .enth{fill:#1f5f8b;}
+        .entht{fill:#ffffff;font-size:14px;font-weight:700;text-anchor:middle;}
+        .attr{fill:#23303a;font-size:11.5px;}
+        .ln{stroke:#7c8b98;stroke-width:1.5;fill:none;}
+        .lab{fill:#5b6b78;font-size:11.5px;}
+      </style>
+      <text x="520" y="30" text-anchor="middle" style="fill:#15405f;font-size:19px;font-weight:700;">E-R 图：住院护理不良事件上报与 RCA 辅助分析系统（9 张表）</text>
+      <g class="ln">
+        <path d="M475,114 L165,188"/>
+        <path d="M560,114 L875,188"/>
+        <path d="M475,114 L475,288"/>
+        <path d="M270,222 L370,300"/>
+        <path d="M770,222 L570,300"/>
+        <path d="M165,420 L408,346"/>
+        <path d="M875,420 L542,346"/>
+        <path d="M195,558 L440,356"/>
+        <path d="M495,558 L495,356"/>
+        <path d="M300,254 C300,360 392,470 392,558"/>
+        <path d="M210,254 C210,470 700,470 805,558"/>
+      </g>
+      <rect x="370" y="50" width="210" height="64" rx="8" class="ent"/>
+      <rect x="370" y="50" width="210" height="26" rx="8" class="enth"/><text x="475" y="68" class="entht">科室字典 sys_department</text>
+      <text x="380" y="92" class="attr">dept_id / dept_code / dept_name / status</text>
+      <rect x="60" y="188" width="210" height="66" rx="8" class="ent"/>
+      <rect x="60" y="188" width="210" height="26" rx="8" class="enth"/><text x="165" y="206" class="entht">系统用户 sys_user</text>
+      <text x="70" y="230" class="attr">user_id / username / password</text>
+      <text x="70" y="246" class="attr">role / dept_id / status</text>
+      <rect x="770" y="188" width="210" height="66" rx="8" class="ent"/>
+      <rect x="770" y="188" width="210" height="26" rx="8" class="enth"/><text x="875" y="206" class="entht">模拟患者 patient</text>
+      <text x="780" y="230" class="attr">patient_id / masked_name / gender</text>
+      <text x="780" y="246" class="attr">age / bed_no / id_no_masked（脱敏）</text>
+      <rect x="370" y="288" width="210" height="68" rx="8" class="ent" style="stroke-width:2.4;"/>
+      <rect x="370" y="288" width="210" height="26" rx="8" class="enth"/><text x="475" y="306" class="entht">不良事件主表 adverse_event</text>
+      <text x="380" y="330" class="attr">event_id / event_no / reporter_id</text>
+      <text x="380" y="346" class="attr">is_anonymous / dept_id / patient_id</text>
+      <rect x="60" y="420" width="210" height="64" rx="8" class="ent"/>
+      <rect x="60" y="420" width="210" height="26" rx="8" class="enth"/><text x="165" y="438" class="entht">损伤分级字典</text>
+      <text x="70" y="462" class="attr">level_code / level_name / level_desc</text>
+      <text x="70" y="478" class="attr">Ⅰ/Ⅱ/Ⅲ/Ⅳ 级</text>
+      <rect x="770" y="420" width="210" height="64" rx="8" class="ent"/>
+      <rect x="770" y="420" width="210" height="26" rx="8" class="enth"/><text x="875" y="438" class="entht">事件类型字典</text>
+      <text x="780" y="462" class="attr">type_id / type_code / type_name</text>
+      <text x="780" y="478" class="attr">category（跌倒/压疮/外渗…）</text>
+      <rect x="90" y="558" width="210" height="64" rx="8" class="ent"/>
+      <rect x="90" y="558" width="210" height="26" rx="8" class="enth"/><text x="195" y="576" class="entht">事件诱因记录 event_factor</text>
+      <text x="100" y="600" class="attr">factor_id / event_id / dimension</text>
+      <text x="100" y="616" class="attr">人/机/料/法/环 + content</text>
+      <rect x="390" y="558" width="210" height="64" rx="8" class="ent"/>
+      <rect x="390" y="558" width="210" height="26" rx="8" class="enth"/><text x="495" y="576" class="entht">RCA 根因分析 rca_record</text>
+      <text x="400" y="600" class="attr">rca_id / event_id / analyst_id</text>
+      <text x="400" y="616" class="attr">root_* / improvement / status</text>
+      <rect x="700" y="558" width="210" height="64" rx="8" class="ent"/>
+      <rect x="700" y="558" width="210" height="26" rx="8" class="enth"/><text x="805" y="576" class="entht">审计日志 sys_audit_log</text>
+      <text x="710" y="600" class="attr">log_id / user_id / action_type</text>
+      <text x="710" y="616" class="attr">target / req_param / ip_addr</text>
+      <g class="lab">
+        <text x="300" y="160">1 : N 归属科室</text>
+        <text x="700" y="160">1 : N 所属科室</text>
+        <text x="520" y="210">1 : N 发生科室</text>
+        <text x="300" y="290">1 : N 上报人</text>
+        <text x="690" y="290">1 : N 患者</text>
+        <text x="250" y="392">1 : N 损伤分级</text>
+        <text x="700" y="392">1 : N 事件类型</text>
+        <text x="280" y="470">1 : N 诱因</text>
+        <text x="500" y="470">1 : N 根因</text>
+        <text x="330" y="430" transform="rotate(54 330 430)">1 : N 分析人</text>
+        <text x="470" y="430" transform="rotate(-62 470 430)">1 : N 操作人</text>
+      </g>
+    </svg>
+    <div class="figcap">图 2 E-R 图（实线箭头表示外键引用方向：多端 → 一端；标注 1:N 基数）。字段级结构见 doc/数据库设计.md。</div>
+  </div>
+
+  <div class="callout">
+    <b>说明：</b>本页为图件总览。字段级表结构（9 张表逐列）、关键接口清单、数据范围隔离伪代码、脱敏与审计设计等完整内容，分别见
+    <b>doc/总体方案.md</b> 与 <b>doc/数据库设计.md</b>；建库脚本见 <b>sql/01_init.sql</b>。
+  </div>
+
+  <div class="foot">
+    <p>本文件为《住院护理不良事件上报与根因辅助分析原型系统》第二阶段交付：总体方案与数据库设计（图件预览 V1.0）。</p>
+    <p>⚠ 系统仅用于教学模拟，不连接真实临床数据，不用于临床诊断或诊疗决策。</p>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<svg viewBox="0 0 880 880" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+  <defs>
+    <marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6b78"/>
+    </marker>
+  </defs>
+  <style>
+    .t{fill:#15405f;font-size:19px;font-weight:700;}
+    .n{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.6;rx:8;}
+    .nt{fill:#15405f;font-size:14px;}
+    .d{fill:#fff6e6;stroke:#f0c36d;stroke-width:1.8;}
+    .dt{fill:#a45c00;font-size:14px;font-weight:600;}
+    .ln{stroke:#7c8b98;stroke-width:1.6;fill:none;marker-end:url(#ar);}
+    .note{fill:#fbfdfe;stroke:#2e8b9e;stroke-width:1.4;}
+    .notet{fill:#23303a;font-size:12.5px;}
+    .e{fill:#b34a4a;font-size:13px;font-weight:600;}
+  </style>
+
+  <text x="440" y="30" text-anchor="middle" class="t">业务流程图 1：不良事件上报主流程（含匿名与必填校验）</text>
+
+  <!-- 1 事件发生 -->
+  <rect x="200" y="56" width="360" height="46" rx="8" class="n"/>
+  <text x="380" y="84" text-anchor="middle" class="nt">【护士】护理不良事件发生</text>
+  <!-- 2 登录 -->
+  <rect x="200" y="132" width="360" height="46" rx="8" class="n"/>
+  <text x="380" y="160" text-anchor="middle" class="nt">【护士】登录系统（JWT 鉴权）</text>
+  <!-- 3 填写报表 -->
+  <rect x="200" y="208" width="360" height="64" rx="8" class="n"/>
+  <text x="380" y="234" text-anchor="middle" class="nt">【护士】填写报表</text>
+  <text x="380" y="256" text-anchor="middle" class="notet">时间 / 科室 / 类型 / 损伤等级 / 经过 / 现场</text>
+  <!-- 4 是否匿名 -->
+  <path d="M380,272 L450,310 L380,348 L310,310 Z" class="d"/>
+  <text x="380" y="306" text-anchor="middle" class="dt">是否匿名上报？</text>
+  <text x="380" y="326" text-anchor="middle" style="fill:#a45c00;font-size:11px;">否 ↓　是 →</text>
+  <!-- 匿名说明 -->
+  <rect x="600" y="288" width="250" height="46" rx="6" class="note"/>
+  <text x="725" y="308" text-anchor="middle" class="notet">是：reporter_id = NULL</text>
+  <text x="725" y="325" text-anchor="middle" class="notet">审计以 ANONYMOUS 记录</text>
+  <!-- 5 提交 -->
+  <rect x="200" y="392" width="360" height="46" rx="8" class="n"/>
+  <text x="380" y="420" text-anchor="middle" class="nt">【护士】点击提交</text>
+  <!-- 6 校验 -->
+  <rect x="200" y="470" width="360" height="46" rx="8" class="n"/>
+  <text x="380" y="498" text-anchor="middle" class="nt">【系统】必填项校验</text>
+  <!-- 7 通过？ -->
+  <path d="M380,534 L450,572 L380,610 L310,572 Z" class="d"/>
+  <text x="380" y="568" text-anchor="middle" class="dt">校验通过？</text>
+  <text x="380" y="588" text-anchor="middle" style="fill:#a45c00;font-size:11px;">否 ←　是 ↓</text>
+  <!-- 8 写主表 -->
+  <rect x="200" y="654" width="360" height="46" rx="8" class="n"/>
+  <text x="380" y="682" text-anchor="middle" class="nt">【系统】写入 adverse_event 主表 + 生成事件编号</text>
+  <!-- 9 审计 -->
+  <rect x="200" y="730" width="360" height="46" rx="8" class="n"/>
+  <text x="380" y="758" text-anchor="middle" class="nt">【系统】写 sys_audit_log 审计日志</text>
+  <!-- 10 查看 -->
+  <rect x="200" y="806" width="360" height="46" rx="8" class="n"/>
+  <text x="380" y="834" text-anchor="middle" class="nt">【护士长/管理员】按数据范围查看 → 触发 RCA</text>
+
+  <!-- 连线 -->
+  <path d="M380,102 L380,132" class="ln"/>
+  <path d="M380,178 L380,208" class="ln"/>
+  <path d="M380,272 L380,272" class="ln"/>
+  <path d="M380,348 L380,392" class="ln"/>
+  <path d="M450,310 L600,310" class="ln"/>
+  <path d="M380,438 L380,470" class="ln"/>
+  <path d="M380,516 L380,534" class="ln"/>
+  <path d="M380,610 L380,654" class="ln"/>
+  <path d="M380,700 L380,730" class="ln"/>
+  <path d="M380,776 L380,806" class="ln"/>
+  <!-- 否：返回提示 -->
+  <path d="M310,572 L150,572 L150,240 L200,240" class="ln"/>
+  <rect x="40" y="556" width="120" height="32" rx="6" class="note"/>
+  <text x="100" y="577" text-anchor="middle" class="e">否：返回提示缺失项</text>
+</svg>

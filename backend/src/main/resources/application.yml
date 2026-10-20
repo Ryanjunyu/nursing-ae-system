@@ -1,0 +1,35 @@
+server:
+  port: 8080
+
+spring:
+  # 教学模拟声明
+  application:
+    name: nursing-ae-system
+  datasource:
+    # 本机 MySQL 8.0，库 nursing_ae_db（已建好）
+    url: jdbc:mysql://127.0.0.1:3306/nursing_ae_db?useUnicode=true&characterEncoding=UTF-8&connectionCollation=utf8mb4_general_ci&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    default-property-inclusion: non_null
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+  type-aliases-package: com.his.ae.entity
+
+jwt:
+  secret: "nursing-ae-teaching-secret-key-2026-change-me"
+  expiration: 86400000   # 24 小时（毫秒）
+
+# 教学模拟标识，接口/页面显著提示
+app:
+  teaching-mode: true

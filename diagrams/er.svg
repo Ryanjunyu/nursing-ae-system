@@ -1,0 +1,97 @@
+<svg viewBox="0 0 1040 720" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+  <style>
+    .ent{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.8;}
+    .enth{fill:#1f5f8b;}
+    .entht{fill:#ffffff;font-size:14px;font-weight:700;text-anchor:middle;}
+    .attr{fill:#23303a;font-size:11.5px;}
+    .ln{stroke:#7c8b98;stroke-width:1.5;fill:none;}
+    .card{fill:#a45c00;font-size:12px;font-weight:600;}
+    .lab{fill:#5b6b78;font-size:11.5px;}
+  </style>
+
+  <text x="520" y="30" text-anchor="middle" style="fill:#15405f;font-size:19px;font-weight:700;">E-R 图：住院护理不良事件上报与 RCA 辅助分析系统（9 张表）</text>
+
+  <!-- 关系线 -->
+  <g class="ln">
+    <path d="M475,114 L165,188"/>
+    <path d="M560,114 L875,188"/>
+    <path d="M475,114 L475,288"/>
+    <path d="M270,222 L370,300"/>
+    <path d="M770,222 L570,300"/>
+    <path d="M165,420 L408,346"/>
+    <path d="M875,420 L542,346"/>
+    <path d="M195,558 L440,356"/>
+    <path d="M495,558 L495,356"/>
+    <path d="M300,254 C300,360 392,470 392,558"/>
+    <path d="M210,254 C210,470 700,470 805,558"/>
+  </g>
+
+  <!-- 实体 -->
+  <!-- sys_department -->
+  <rect x="370" y="50" width="210" height="64" rx="8" class="ent"/>
+  <rect x="370" y="50" width="210" height="26" rx="8" class="enth"/><text x="475" y="68" class="entht">科室字典 sys_department</text>
+  <text x="380" y="92" class="attr">dept_id / dept_code / dept_name / status</text>
+
+  <!-- sys_user -->
+  <rect x="60" y="188" width="210" height="66" rx="8" class="ent"/>
+  <rect x="60" y="188" width="210" height="26" rx="8" class="enth"/><text x="165" y="206" class="entht">系统用户 sys_user</text>
+  <text x="70" y="230" class="attr">user_id / username / password</text>
+  <text x="70" y="246" class="attr">role / dept_id / status</text>
+
+  <!-- patient -->
+  <rect x="770" y="188" width="210" height="66" rx="8" class="ent"/>
+  <rect x="770" y="188" width="210" height="26" rx="8" class="enth"/><text x="875" y="206" class="entht">模拟患者 patient</text>
+  <text x="780" y="230" class="attr">patient_id / masked_name / gender</text>
+  <text x="780" y="246" class="attr">age / bed_no / id_no_masked（脱敏）</text>
+
+  <!-- adverse_event 中心 -->
+  <rect x="370" y="288" width="210" height="68" rx="8" class="ent" style="stroke-width:2.4;"/>
+  <rect x="370" y="288" width="210" height="26" rx="8" class="enth"/><text x="475" y="306" class="entht">不良事件主表 adverse_event</text>
+  <text x="380" y="330" class="attr">event_id / event_no / reporter_id</text>
+  <text x="380" y="346" class="attr">is_anonymous / dept_id / patient_id</text>
+
+  <!-- dict_injury_level -->
+  <rect x="60" y="420" width="210" height="64" rx="8" class="ent"/>
+  <rect x="60" y="420" width="210" height="26" rx="8" class="enth"/><text x="165" y="438" class="entht">损伤分级字典</text>
+  <text x="70" y="462" class="attr">level_code / level_name / level_desc</text>
+  <text x="70" y="478" class="attr">Ⅰ/Ⅱ/Ⅲ/Ⅳ 级</text>
+
+  <!-- dict_event_type -->
+  <rect x="770" y="420" width="210" height="64" rx="8" class="ent"/>
+  <rect x="770" y="420" width="210" height="26" rx="8" class="enth"/><text x="875" y="438" class="entht">事件类型字典</text>
+  <text x="780" y="462" class="attr">type_id / type_code / type_name</text>
+  <text x="780" y="478" class="attr">category（跌倒/压疮/外渗…）</text>
+
+  <!-- event_factor -->
+  <rect x="90" y="558" width="210" height="64" rx="8" class="ent"/>
+  <rect x="90" y="558" width="210" height="26" rx="8" class="enth"/><text x="195" y="576" class="entht">事件诱因记录 event_factor</text>
+  <text x="100" y="600" class="attr">factor_id / event_id / dimension</text>
+  <text x="100" y="616" class="attr">人/机/料/法/环 + content</text>
+
+  <!-- rca_record -->
+  <rect x="390" y="558" width="210" height="64" rx="8" class="ent"/>
+  <rect x="390" y="558" width="210" height="26" rx="8" class="enth"/><text x="495" y="576" class="entht">RCA 根因分析 rca_record</text>
+  <text x="400" y="600" class="attr">rca_id / event_id / analyst_id</text>
+  <text x="400" y="616" class="attr">root_* / improvement / status</text>
+
+  <!-- sys_audit_log -->
+  <rect x="700" y="558" width="210" height="64" rx="8" class="ent"/>
+  <rect x="700" y="558" width="210" height="26" rx="8" class="enth"/><text x="805" y="576" class="entht">审计日志 sys_audit_log</text>
+  <text x="710" y="600" class="attr">log_id / user_id / action_type</text>
+  <text x="710" y="616" class="attr">target / req_param / ip_addr</text>
+
+  <!-- 基数与关系标注 -->
+  <g class="lab">
+    <text x="300" y="160">1 : N 归属科室</text>
+    <text x="700" y="160">1 : N 所属科室</text>
+    <text x="520" y="210">1 : N 发生科室</text>
+    <text x="300" y="290">1 : N 上报人</text>
+    <text x="690" y="290">1 : N 患者</text>
+    <text x="250" y="392">1 : N 损伤分级</text>
+    <text x="700" y="392">1 : N 事件类型</text>
+    <text x="280" y="470">1 : N 诱因</text>
+    <text x="500" y="470">1 : N 根因</text>
+    <text x="330" y="430" transform="rotate(54 330 430)">1 : N 分析人</text>
+    <text x="470" y="430" transform="rotate(-62 470 430)">1 : N 操作人</text>
+  </g>
+</svg>

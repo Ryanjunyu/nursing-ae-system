@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>住院护理不良事件上报与根因辅助分析原型系统 · 需求分析与总体设计</title>
+<style>
+  :root{--primary:#1f5f8b;--primary-dark:#15405f;--accent:#2e8b9e;--ink:#23303a;--muted:#5b6b78;--line:#dbe3ea;--bg:#f5f7fa;--panel:#fff;}
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Microsoft YaHei","PingFang SC","SimSun",sans-serif;color:var(--ink);background:var(--bg);line-height:1.75;font-size:15px;}
+  .page{max-width:1000px;margin:0 auto;background:var(--panel);padding:48px 56px;box-shadow:0 2px 18px rgba(20,40,60,.08);}
+  header.doc-cover{text-align:center;padding:50px 20px 40px;border-bottom:3px solid var(--primary);margin-bottom:34px;}
+  header.doc-cover .tag{display:inline-block;background:var(--primary);color:#fff;padding:4px 14px;border-radius:14px;font-size:13px;letter-spacing:2px;margin-bottom:18px;}
+  header.doc-cover h1{font-size:27px;margin:8px 0 6px;color:var(--primary-dark);line-height:1.4;}
+  header.doc-cover .sub{font-size:15px;color:var(--muted);margin-bottom:22px;}
+  header.doc-cover .meta{display:inline-block;text-align:left;font-size:14px;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:14px 24px;background:#fbfdfe;}
+  header.doc-cover .meta b{color:var(--ink);}
+  h2.sec{font-size:21px;color:var(--primary-dark);border-left:5px solid var(--primary);padding-left:12px;margin:38px 0 14px;}
+  h3.sub{font-size:17px;color:var(--accent);margin:24px 0 8px;}
+  p{margin:8px 0;}
+  ul,ol{padding-left:24px;}
+  li{margin:4px 0;}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:13.5px;}
+  th,td{border:1px solid var(--line);padding:8px 10px;vertical-align:top;text-align:left;}
+  th{background:#eef4f8;color:var(--primary-dark);font-weight:600;}
+  tbody tr:nth-child(even){background:#fafcfe;}
+  code{background:#eef3f7;padding:1px 6px;border-radius:4px;font-family:"Consolas",monospace;font-size:13px;}
+  .callout{border-left:4px solid #f0c36d;background:#fff6e6;padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:14px;}
+  .callout b{color:#a45c00;}
+  .fig{background:#fbfdfe;border:1px solid var(--line);border-radius:10px;padding:14px;margin:16px 0;}
+  .fig svg{width:100%;height:auto;display:block;}
+  .figcap{font-size:12.5px;color:var(--muted);margin-top:6px;}
+  .badge{display:inline-block;background:#e6f0f5;color:var(--primary-dark);border:1px solid #cfe0ea;border-radius:6px;padding:1px 8px;font-size:12.5px;margin-right:4px;}
+  .foot{margin-top:40px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted);}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="doc-cover">
+    <span class="tag">医学信息课程设计 · 需求分析与总体设计</span>
+    <h1>住院护理不良事件上报与<br>根因辅助分析原型系统</h1>
+    <div class="sub">需求分析 · 业务流程梳理 · 流程图 / E-R 图 · 总体方案与数据库设计</div>
+    <div class="meta">
+      <div><b>设计题目：</b>住院护理不良事件上报与根因辅助分析原型系统</div>
+      <div><b>阶段交付：</b>第二阶段 —— 需求分析、流程图、E-R 图、总体方案、数据库设计</div>
+      <div><b>完成日期：</b>2026 年 10 月</div>
+      <div style="margin-top:8px;color:#a45c00;"><b>⚠ 声明：</b>本系统仅用于教学模拟，不连接真实临床数据，不用于临床诊断或诊疗决策。</div>
+    </div>
+  </header>
+
+  <!-- ========== 1 需求分析 ========== -->
+  <h2 class="sec">1. 需求分析</h2>
+
+  <h3 class="sub">1.1 业务角色与用例</h3>
+  <p>系统面向三类角色，权限与数据访问范围严格隔离：<span class="badge">普通护士 NURSE</span><span class="badge">科室护士长 HEAD_NURSE</span><span class="badge">系统管理员 ADMIN</span>。下图为用例图，刻画各角色可执行的系统功能。</p>
+  <div class="fig">
+    <svg viewBox="0 0 1000 640" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+      <style>
+        .t{fill:#15405f;font-size:20px;font-weight:700;}
+        .lab{fill:#23303a;font-size:14px;}
+        .uc{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.6;}
+        .uclab{fill:#15405f;font-size:13px;text-anchor:middle;}
+        .actor{fill:none;stroke:#2e8b9e;stroke-width:2.6;}
+        .arole{fill:#15405f;font-size:14px;font-weight:600;text-anchor:middle;}
+        .ln{stroke:#7c8b98;stroke-width:1.4;fill:none;}
+        .dln{stroke:#7c8b98;stroke-width:1.2;fill:none;stroke-dasharray:5 4;}
+        .sys{fill:none;stroke:#1f5f8b;stroke-width:1.8;stroke-dasharray:7 5;}
+        .syslab{fill:#1f5f8b;font-size:14px;font-weight:600;}
+      </style>
+      <text x="500" y="34" text-anchor="middle" class="t">用例图：住院护理不良事件上报与 RCA 辅助分析系统</text>
+      <rect x="300" y="66" width="660" height="540" rx="10" class="sys"/>
+      <text x="630" y="90" text-anchor="middle" class="syslab">住院护理不良事件上报与 RCA 辅助分析系统</text>
+      <g transform="translate(120,150)">
+        <circle cx="0" cy="-24" r="11" class="actor"/><line x1="0" y1="-13" x2="0" y2="10" class="actor"/>
+        <line x1="-14" y1="-4" x2="14" y2="-4" class="actor"/><line x1="0" y1="10" x2="-14" y2="30" class="actor"/><line x1="0" y1="10" x2="14" y2="30" class="actor"/>
+        <text x="0" y="52" class="arole">普通护士</text><text x="0" y="70" class="arole" style="fill:#5b6b78;font-weight:400;font-size:12px;">NURSE</text>
+      </g>
+      <g transform="translate(120,350)">
+        <circle cx="0" cy="-24" r="11" class="actor"/><line x1="0" y1="-13" x2="0" y2="10" class="actor"/>
+        <line x1="-14" y1="-4" x2="14" y2="-4" class="actor"/><line x1="0" y1="10" x2="-14" y2="30" class="actor"/><line x1="0" y1="10" x2="14" y2="30" class="actor"/>
+        <text x="0" y="52" class="arole">科室护士长</text><text x="0" y="70" class="arole" style="fill:#5b6b78;font-weight:400;font-size:12px;">HEAD_NURSE</text>
+      </g>
+      <g transform="translate(120,540)">
+        <circle cx="0" cy="-24" r="11" class="actor"/><line x1="0" y1="-13" x2="0" y2="10" class="actor"/>
+        <line x1="-14" y1="-4" x2="14" y2="-4" class="actor"/><line x1="0" y1="10" x2="-14" y2="30" class="actor"/><line x1="0" y1="10" x2="14" y2="30" class="actor"/>
+        <text x="0" y="52" class="arole">系统管理员</text><text x="0" y="70" class="arole" style="fill:#5b6b78;font-weight:400;font-size:12px;">ADMIN</text>
+      </g>
+      <ellipse cx="430" cy="120" rx="92" ry="27" class="uc"/><text x="430" y="125" class="uclab">填报不良事件</text>
+      <ellipse cx="430" cy="180" rx="78" ry="27" class="uc"/><text x="430" y="185" class="uclab">选择匿名上报</text>
+      <ellipse cx="445" cy="246" rx="112" ry="27" class="uc"/><text x="445" y="251" class="uclab">查看本人/本科室脱敏列表</text>
+      <ellipse cx="740" cy="150" rx="98" ry="27" class="uc"/><text x="740" y="155" class="uclab">填写 RCA 五维分析</text>
+      <ellipse cx="740" cy="216" rx="98" ry="27" class="uc"/><text x="740" y="221" class="uclab">查看本科室全部事件</text>
+      <ellipse cx="740" cy="282" rx="92" ry="27" class="uc"/><text x="740" y="287" class="uclab">检索筛选(本科室)</text>
+      <ellipse cx="430" cy="360" rx="92" ry="27" class="uc"/><text x="430" y="365" class="uclab">用户与角色管理</text>
+      <ellipse cx="430" cy="420" rx="80" ry="27" class="uc"/><text x="430" y="425" class="uclab">维护字典数据</text>
+      <ellipse cx="740" cy="360" rx="92" ry="27" class="uc"/><text x="740" y="365" class="uclab">查看全部事件</text>
+      <ellipse cx="740" cy="426" rx="80" ry="27" class="uc"/><text x="740" y="431" class="uclab">全量统计分析</text>
+      <ellipse cx="740" cy="492" rx="92" ry="27" class="uc"/><text x="740" y="497" class="uclab">审计日志查看</text>
+      <ellipse cx="740" cy="558" rx="92" ry="27" class="uc"/><text x="740" y="563" class="uclab">检索筛选(全部)</text>
+      <path d="M131,162 C260,162 320,130 338,124" class="ln"/>
+      <path d="M131,162 C260,162 352,184 352,180" class="ln"/>
+      <path d="M131,162 C260,162 333,248 333,246" class="ln"/>
+      <path d="M131,162 C300,170 620,150 642,150" class="ln"/>
+      <path d="M150,360 C300,300 620,216 642,216" class="ln"/>
+      <path d="M150,360 C300,300 648,282 648,282" class="ln"/>
+      <path d="M150,360 C300,300 642,150 642,150" class="ln"/>
+      <path d="M131,540 C260,540 338,360 338,360" class="ln"/>
+      <path d="M131,540 C260,540 350,420 350,420" class="ln"/>
+      <path d="M150,540 C320,440 648,360 648,360" class="ln"/>
+      <path d="M150,540 C320,470 660,426 660,426" class="ln"/>
+      <path d="M150,540 C320,500 648,492 648,492" class="ln"/>
+      <path d="M150,540 C320,540 648,558 648,558" class="ln"/>
+      <path d="M430,147 C430,160 430,153 430,153" class="dln"/>
+      <path d="M522,120 C600,120 680,150 642,150" class="dln"/>
+      <text x="582" y="116" style="fill:#5b6b78;font-size:11px;">&lt;&lt;include&gt;&gt;</text>
+      <path d="M740,243 C740,260 740,255 740,255" class="dln"/>
+    </svg>
+    <div class="figcap">图 1-1 用例图：三角色 × 系统功能（实线为关联，虚线为包含/扩展关系）</div>
+  </div>
+
+  <h3 class="sub">1.2 功能需求列表</h3>
+  <table>
+    <thead><tr><th>编号</th><th>功能模块</th><th>关键需求</th><th>主要角色</th></tr></thead>
+    <tbody>
+      <tr><td>F1</td><td>用户权限管理</td><td>三角色；数据访问范围隔离；支持匿名上报选项</td><td>ADMIN / 全体</td></tr>
+      <tr><td>F2</td><td>不良事件填报表单</td><td>事件时间/科室/类型/损伤等级/经过/现场；必填校验</td><td>NURSE</td></tr>
+      <tr><td>F3</td><td>RCA 根因辅助分析</td><td>人-机-料-法-环 五维模板；时间序列表；保存分析记录</td><td>HEAD_NURSE / ADMIN</td></tr>
+      <tr><td>F4</td><td>事件检索筛选</td><td>按科室/类型/损伤等级/时间区间筛选；护士长仅本科室，管理员全部</td><td>HEAD_NURSE / ADMIN</td></tr>
+      <tr><td>F5</td><td>统计分析</td><td>各科室各类事件数量；图表定位高频安全问题</td><td>HEAD_NURSE / ADMIN</td></tr>
+      <tr><td>F6</td><td>安全约束</td><td>患者信息脱敏；全操作审计日志</td><td>系统</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub">1.3 非功能需求</h3>
+  <ul>
+    <li><strong>隐私合规：</strong>患者姓名/证件号脱敏存储与展示；敏感字段在审计参数中脱敏；</li>
+    <li><strong>权限正确：</strong>越权访问必须被拒绝并返回无权限提示；</li>
+    <li><strong>易用性：</strong>填报核心信息 3 分钟内可完成，支持匿名；</li>
+    <li><strong>性能：</strong>原型数据量小，统计查询响应 &lt; 1s；</li>
+    <li><strong>教学模拟：</strong>全部为模拟数据，界面显著标注"教学模拟，不用于临床"。</li>
+  </ul>
+
+  <!-- ========== 2 业务流程梳理 ========== -->
+  <h2 class="sec">2. 业务流程梳理</h2>
+
+  <h3 class="sub">2.1 不良事件上报主流程</h3>
+  <p>覆盖"事件发生 → 填报（可匿名）→ 必填校验 → 入库+审计 → 分级查看 → 触发 RCA"全链路，明确系统自动校验与匿名脱敏节点。</p>
+  <div class="fig">
+    <svg viewBox="0 0 880 880" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+      <defs><marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#5b6b78"/></marker></defs>
+      <style>
+        .t{fill:#15405f;font-size:19px;font-weight:700;}
+        .n{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.6;}
+        .nt{fill:#15405f;font-size:14px;}
+        .d{fill:#fff6e6;stroke:#f0c36d;stroke-width:1.8;}
+        .dt{fill:#a45c00;font-size:14px;font-weight:600;}
+        .ln{stroke:#7c8b98;stroke-width:1.6;fill:none;marker-end:url(#ar);}
+        .note{fill:#fbfdfe;stroke:#2e8b9e;stroke-width:1.4;}
+        .notet{fill:#23303a;font-size:12.5px;}
+        .e{fill:#b34a4a;font-size:13px;font-weight:600;}
+      </style>
+      <text x="440" y="30" text-anchor="middle" class="t">业务流程图 1：不良事件上报主流程（含匿名与必填校验）</text>
+      <rect x="200" y="56" width="360" height="46" rx="8" class="n"/><text x="380" y="84" text-anchor="middle" class="nt">【护士】护理不良事件发生</text>
+      <rect x="200" y="132" width="360" height="46" rx="8" class="n"/><text x="380" y="160" text-anchor="middle" class="nt">【护士】登录系统（JWT 鉴权）</text>
+      <rect x="200" y="208" width="360" height="64" rx="8" class="n"/><text x="380" y="234" text-anchor="middle" class="nt">【护士】填写报表</text><text x="380" y="256" text-anchor="middle" class="notet">时间 / 科室 / 类型 / 损伤等级 / 经过 / 现场</text>
+      <path d="M380,272 L450,310 L380,348 L310,310 Z" class="d"/><text x="380" y="306" text-anchor="middle" class="dt">是否匿名上报？</text><text x="380" y="326" text-anchor="middle" style="fill:#a45c00;font-size:11px;">否 ↓　是 →</text>
+      <rect x="600" y="288" width="250" height="46" rx="6" class="note"/><text x="725" y="308" text-anchor="middle" class="notet">是：reporter_id = NULL</text><text x="725" y="325" text-anchor="middle" class="notet">审计以 ANONYMOUS 记录</text>
+      <rect x="200" y="392" width="360" height="46" rx="8" class="n"/><text x="380" y="420" text-anchor="middle" class="nt">【护士】点击提交</text>
+      <rect x="200" y="470" width="360" height="46" rx="8" class="n"/><text x="380" y="498" text-anchor="middle" class="nt">【系统】必填项校验</text>
+      <path d="M380,534 L450,572 L380,610 L310,572 Z" class="d"/><text x="380" y="568" text-anchor="middle" class="dt">校验通过？</text><text x="380" y="588" text-anchor="middle" style="fill:#a45c00;font-size:11px;">否 ←　是 ↓</text>
+      <rect x="200" y="654" width="360" height="46" rx="8" class="n"/><text x="380" y="682" text-anchor="middle" class="nt">【系统】写入 adverse_event 主表 + 生成事件编号</text>
+      <rect x="200" y="730" width="360" height="46" rx="8" class="n"/><text x="380" y="758" text-anchor="middle" class="nt">【系统】写 sys_audit_log 审计日志</text>
+      <rect x="200" y="806" width="360" height="46" rx="8" class="n"/><text x="380" y="834" text-anchor="middle" class="nt">【护士长/管理员】按数据范围查看 → 触发 RCA</text>
+      <path d="M380,102 L380,132" class="ln"/><path d="M380,178 L380,208" class="ln"/><path d="M380,272 L380,272" class="ln"/><path d="M380,348 L380,392" class="ln"/><path d="M450,310 L600,310" class="ln"/><path d="M380,438 L380,470" class="ln"/><path d="M380,516 L380,534" class="ln"/><path d="M380,610 L380,654" class="ln"/><path d="M380,700 L380,730" class="ln"/><path d="M380,776 L380,806" class="ln"/>
+      <path d="M310,572 L150,572 L150,240 L200,240" class="ln"/>
+      <rect x="40" y="556" width="120" height="32" rx="6" class="note"/><text x="100" y="577" text-anchor="middle" class="e">否：返回提示缺失项</text>
+    </svg>
+    <div class="figcap">图 2-1 不良事件上报主流程（含匿名通道与必填校验双拦截）</div>
+  </div>
+
+  <h3 class="sub">2.2 RCA 五维根因辅助分析流程</h3>
+  <p>以"人-机-料-法-环"五维模板引导结构化记录诱因，沉淀至 <code>event_factor</code> 与 <code>rca_record</code>，并生成鱼骨图与改进措施，状态机驱动分析闭环。</p>
+  <div class="fig">
+    <svg viewBox="0 0 880 740" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+      <defs><marker id="ar2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#5b6b78"/></marker></defs>
+      <style>
+        .t{fill:#15405f;font-size:19px;font-weight:700;}
+        .n{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.6;}
+        .nt{fill:#15405f;font-size:14px;}
+        .dim{fill:#e8f0f5;stroke:#2e8b9e;stroke-width:1.6;}
+        .dimt{fill:#15405f;font-size:15px;font-weight:600;}
+        .dimd{fill:#5b6b78;font-size:11px;}
+        .ln{stroke:#7c8b98;stroke-width:1.6;fill:none;marker-end:url(#ar2);}
+        .note{fill:#fbfdfe;stroke:#2e8b9e;stroke-width:1.4;}
+        .notet{fill:#23303a;font-size:12.5px;}
+        .st{fill:#fff6e6;stroke:#f0c36d;stroke-width:1.6;}
+        .stt{fill:#a45c00;font-size:13px;font-weight:600;}
+      </style>
+      <text x="440" y="30" text-anchor="middle" class="t">业务流程图 2：RCA 五维根因辅助分析流程</text>
+      <rect x="220" y="48" width="440" height="46" rx="8" class="n"/><text x="440" y="76" text-anchor="middle" class="nt">【护士长/管理员】从事件列表选择目标事件</text>
+      <rect x="240" y="124" width="400" height="46" rx="8" class="n"/><text x="440" y="152" text-anchor="middle" class="nt">进入 RCA 五维填报模板</text>
+      <rect x="40" y="196" width="150" height="58" rx="8" class="dim"/><text x="115" y="222" text-anchor="middle" class="dimt">人</text><text x="115" y="240" text-anchor="middle" class="dimd">人员因素</text>
+      <rect x="208" y="196" width="150" height="58" rx="8" class="dim"/><text x="283" y="222" text-anchor="middle" class="dimt">机</text><text x="283" y="240" text-anchor="middle" class="dimd">设备因素</text>
+      <rect x="376" y="196" width="150" height="58" rx="8" class="dim"/><text x="451" y="222" text-anchor="middle" class="dimt">料</text><text x="451" y="240" text-anchor="middle" class="dimd">物料因素</text>
+      <rect x="544" y="196" width="150" height="58" rx="8" class="dim"/><text x="619" y="222" text-anchor="middle" class="dimt">法</text><text x="619" y="240" text-anchor="middle" class="dimd">方法/制度</text>
+      <rect x="712" y="196" width="128" height="58" rx="8" class="dim"/><text x="776" y="222" text-anchor="middle" class="dimt">环</text><text x="776" y="240" text-anchor="middle" class="dimd">环境因素</text>
+      <rect x="220" y="288" width="440" height="46" rx="8" class="n"/><text x="440" y="316" text-anchor="middle" class="nt">汇总五维诱因 → 写入 event_factor（事件诱因记录表）</text>
+      <rect x="220" y="364" width="440" height="46" rx="8" class="n"/><text x="440" y="392" text-anchor="middle" class="nt">填写时间序列表（结构化还原事件经过）</text>
+      <rect x="220" y="440" width="440" height="46" rx="8" class="n"/><text x="440" y="468" text-anchor="middle" class="nt">基于五维数据生成鱼骨图（ECharts 可视化）</text>
+      <rect x="220" y="516" width="440" height="46" rx="8" class="n"/><text x="440" y="544" text-anchor="middle" class="nt">制定改进措施 → 写入 rca_record（根因 + 改进）</text>
+      <rect x="220" y="592" width="440" height="46" rx="8" class="st"/><text x="440" y="620" text-anchor="middle" class="stt">分析状态机：NOT_STARTED → ANALYZING → DONE</text>
+      <rect x="220" y="668" width="440" height="46" rx="8" class="n"/><text x="440" y="696" text-anchor="middle" class="nt">纳入统计分析 / 持续改进闭环</text>
+      <path d="M440,94 L440,124" class="ln"/><path d="M115,254 L440,288" class="ln"/><path d="M283,254 L440,288" class="ln"/><path d="M451,254 L440,288" class="ln"/><path d="M619,254 L440,288" class="ln"/><path d="M776,254 L440,288" class="ln"/><path d="M440,170 L440,196" class="ln"/><path d="M440,334 L440,364" class="ln"/><path d="M440,410 L440,440" class="ln"/><path d="M440,486 L440,516" class="ln"/><path d="M440,562 L440,592" class="ln"/><path d="M440,638 L440,668" class="ln"/>
+    </svg>
+    <div class="figcap">图 2-2 RCA 五维根因辅助分析流程</div>
+  </div>
+
+  <h3 class="sub">2.3 事件检索 / 统计 + 权限隔离流程</h3>
+  <p>检索与统计前，系统按当前角色自动叠加"数据范围"条件，实现护士/护士长/管理员三级可见性隔离，列表统一脱敏展示。</p>
+  <div class="fig">
+    <svg viewBox="0 0 900 760" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+      <defs><marker id="ar3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#5b6b78"/></marker></defs>
+      <style>
+        .t{fill:#15405f;font-size:19px;font-weight:700;}
+        .n{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.6;}
+        .nt{fill:#15405f;font-size:14px;}
+        .ln{stroke:#7c8b98;stroke-width:1.6;fill:none;marker-end:url(#ar3);}
+        .scope{fill:#e8f0f5;stroke:#2e8b9e;stroke-width:1.5;}
+        .scopet{fill:#15405f;font-size:13px;}
+        .scoped{fill:#5b6b78;font-size:11.5px;}
+      </style>
+      <text x="450" y="30" text-anchor="middle" class="t">业务流程图 3：事件检索 / 统计 + 权限隔离流程</text>
+      <rect x="250" y="48" width="400" height="46" rx="8" class="n"/><text x="450" y="76" text-anchor="middle" class="nt">用户登录（携带 role）</text>
+      <rect x="220" y="124" width="460" height="46" rx="8" class="n"/><text x="450" y="152" text-anchor="middle" class="nt">选择筛选条件：科室 / 类型 / 损伤等级 / 时间区间</text>
+      <rect x="240" y="200" width="420" height="46" rx="8" class="n"/><text x="450" y="228" text-anchor="middle" class="nt">【系统】按角色叠加数据范围隔离</text>
+      <rect x="50" y="276" width="240" height="62" rx="8" class="scope"/><text x="170" y="300" text-anchor="middle" class="scopet">护士 NURSE</text><text x="170" y="320" text-anchor="middle" class="scoped">本人提交 + 本科室脱敏列表</text>
+      <rect x="330" y="276" width="240" height="62" rx="8" class="scope"/><text x="450" y="300" text-anchor="middle" class="scopet">护士长 HEAD_NURSE</text><text x="450" y="320" text-anchor="middle" class="scoped">仅本科室全部事件</text>
+      <rect x="610" y="276" width="240" height="62" rx="8" class="scope"/><text x="730" y="300" text-anchor="middle" class="scopet">管理员 ADMIN</text><text x="730" y="320" text-anchor="middle" class="scoped">全部事件（全科室）</text>
+      <rect x="250" y="372" width="400" height="46" rx="8" class="n"/><text x="450" y="400" text-anchor="middle" class="nt">执行查询（MyBatis-Plus 条件构造）</text>
+      <rect x="220" y="448" width="460" height="46" rx="8" class="n"/><text x="450" y="476" text-anchor="middle" class="nt">返回脱敏事件列表（患者姓名/证件号/住院号脱敏）</text>
+      <rect x="280" y="524" width="340" height="46" rx="8" class="n"/><text x="450" y="552" text-anchor="middle" class="nt">点击「统计分析」</text>
+      <rect x="200" y="600" width="500" height="46" rx="8" class="n"/><text x="450" y="628" text-anchor="middle" class="nt">多维聚合 + ECharts：科室×类型 / 等级分布 / 趋势 / 诱因词云</text>
+      <rect x="300" y="676" width="300" height="46" rx="8" class="n"/><text x="450" y="704" text-anchor="middle" class="nt">输出图表 / 支持导出统计结果</text>
+      <path d="M450,94 L450,124" class="ln"/><path d="M450,170 L450,200" class="ln"/><path d="M260,246 L170,276" class="ln"/><path d="M450,246 L450,276" class="ln"/><path d="M640,246 L730,276" class="ln"/><path d="M170,338 L450,372" class="ln"/><path d="M450,338 L450,372" class="ln"/><path d="M730,338 L450,372" class="ln"/><path d="M450,418 L450,448" class="ln"/><path d="M450,494 L450,524" class="ln"/><path d="M450,570 L450,600" class="ln"/><path d="M450,646 L450,676" class="ln"/>
+    </svg>
+    <div class="figcap">图 2-3 事件检索 / 统计 + 权限隔离流程</div>
+  </div>
+
+  <!-- ========== 3 数据库设计 ========== -->
+  <h2 class="sec">3. 数据库设计</h2>
+  <p>依据课题要求，设计 7 张核心表（用户表、模拟患者信息表、不良事件主表、损伤分级字典表、事件诱因记录表、RCA 根因分析记录表、审计日志），并为支撑"按科室隔离与统计"补充<strong>科室字典表</strong>与<strong>事件类型字典表</strong>，共 9 张表。</p>
+
+  <h3 class="sub">3.1 E-R 图</h3>
+  <div class="fig">
+    <svg viewBox="0 0 1040 720" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+      <style>
+        .ent{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.8;}
+        .enth{fill:#1f5f8b;}
+        .entht{fill:#ffffff;font-size:14px;font-weight:700;text-anchor:middle;}
+        .attr{fill:#23303a;font-size:11.5px;}
+        .ln{stroke:#7c8b98;stroke-width:1.5;fill:none;}
+        .lab{fill:#5b6b78;font-size:11.5px;}
+      </style>
+      <text x="520" y="30" text-anchor="middle" style="fill:#15405f;font-size:19px;font-weight:700;">E-R 图：住院护理不良事件上报与 RCA 辅助分析系统（9 张表）</text>
+      <g class="ln">
+        <path d="M475,114 L165,188"/><path d="M560,114 L875,188"/><path d="M475,114 L475,288"/>
+        <path d="M270,222 L370,300"/><path d="M770,222 L570,300"/><path d="M165,420 L408,346"/><path d="M875,420 L542,346"/>
+        <path d="M195,558 L440,356"/><path d="M495,558 L495,356"/><path d="M300,254 C300,360 392,470 392,558"/><path d="M210,254 C210,470 700,470 805,558"/>
+      </g>
+      <rect x="370" y="50" width="210" height="64" rx="8" class="ent"/><rect x="370" y="50" width="210" height="26" rx="8" class="enth"/><text x="475" y="68" class="entht">科室字典 sys_department</text><text x="380" y="92" class="attr">dept_id / dept_code / dept_name / status</text>
+      <rect x="60" y="188" width="210" height="66" rx="8" class="ent"/><rect x="60" y="188" width="210" height="26" rx="8" class="enth"/><text x="165" y="206" class="entht">系统用户 sys_user</text><text x="70" y="230" class="attr">user_id / username / password</text><text x="70" y="246" class="attr">role / dept_id / status</text>
+      <rect x="770" y="188" width="210" height="66" rx="8" class="ent"/><rect x="770" y="188" width="210" height="26" rx="8" class="enth"/><text x="875" y="206" class="entht">模拟患者 patient</text><text x="780" y="230" class="attr">patient_id / masked_name / gender</text><text x="780" y="246" class="attr">age / bed_no / id_no_masked（脱敏）</text>
+      <rect x="370" y="288" width="210" height="68" rx="8" class="ent" style="stroke-width:2.4;"/><rect x="370" y="288" width="210" height="26" rx="8" class="enth"/><text x="475" y="306" class="entht">不良事件主表 adverse_event</text><text x="380" y="330" class="attr">event_id / event_no / reporter_id</text><text x="380" y="346" class="attr">is_anonymous / dept_id / patient_id</text>
+      <rect x="60" y="420" width="210" height="64" rx="8" class="ent"/><rect x="60" y="420" width="210" height="26" rx="8" class="enth"/><text x="165" y="438" class="entht">损伤分级字典</text><text x="70" y="462" class="attr">level_code / level_name / level_desc</text><text x="70" y="478" class="attr">Ⅰ/Ⅱ/Ⅲ/Ⅳ 级</text>
+      <rect x="770" y="420" width="210" height="64" rx="8" class="ent"/><rect x="770" y="420" width="210" height="26" rx="8" class="enth"/><text x="875" y="438" class="entht">事件类型字典</text><text x="780" y="462" class="attr">type_id / type_code / type_name</text><text x="780" y="478" class="attr">category（跌倒/压疮/外渗…）</text>
+      <rect x="90" y="558" width="210" height="64" rx="8" class="ent"/><rect x="90" y="558" width="210" height="26" rx="8" class="enth"/><text x="195" y="576" class="entht">事件诱因记录 event_factor</text><text x="100" y="600" class="attr">factor_id / event_id / dimension</text><text x="100" y="616" class="attr">人/机/料/法/环 + content</text>
+      <rect x="390" y="558" width="210" height="64" rx="8" class="ent"/><rect x="390" y="558" width="210" height="26" rx="8" class="enth"/><text x="495" y="576" class="entht">RCA 根因分析 rca_record</text><text x="400" y="600" class="attr">rca_id / event_id / analyst_id</text><text x="400" y="616" class="attr">root_* / improvement / status</text>
+      <rect x="700" y="558" width="210" height="64" rx="8" class="ent"/><rect x="700" y="558" width="210" height="26" rx="8" class="enth"/><text x="805" y="576" class="entht">审计日志 sys_audit_log</text><text x="710" y="600" class="attr">log_id / user_id / action_type</text><text x="710" y="616" class="attr">target / req_param / ip_addr</text>
+      <g class="lab">
+        <text x="300" y="160">1 : N 归属科室</text><text x="700" y="160">1 : N 所属科室</text><text x="520" y="210">1 : N 发生科室</text>
+        <text x="300" y="290">1 : N 上报人</text><text x="690" y="290">1 : N 患者</text><text x="250" y="392">1 : N 损伤分级</text>
+        <text x="700" y="392">1 : N 事件类型</text><text x="280" y="470">1 : N 诱因</text><text x="500" y="470">1 : N 根因</text>
+        <text x="330" y="430" transform="rotate(54 330 430)">1 : N 分析人</text><text x="470" y="430" transform="rotate(-62 470 430)">1 : N 操作人</text>
+      </g>
+    </svg>
+    <div class="figcap">图 3-1 E-R 图（实线箭头表示外键引用方向：多端 → 一端；标注 1:N 基数）</div>
+  </div>
+
+  <h3 class="sub">3.2 数据表清单与字段说明</h3>
+  <table>
+    <thead><tr><th>表名</th><th>中文</th><th>核心字段</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td><code>sys_user</code></td><td>用户表</td><td>user_id, username, password, role, dept_id, status</td><td>三角色；密码 BCrypt 加密</td></tr>
+      <tr><td><code>patient</code></td><td>模拟患者信息表</td><td>patient_id, masked_name, gender, age, bed_no, id_no_masked</td><td>脱敏存储</td></tr>
+      <tr><td><code>adverse_event</code></td><td>不良事件主表</td><td>event_id, event_no, reporter_id, is_anonymous, dept_id, patient_id, event_type, injury_level, occur_time, event_desc, scene_desc, status</td><td>核心业务表</td></tr>
+      <tr><td><code>dict_injury_level</code></td><td>损伤分级字典表</td><td>level_code, level_name, level_desc, sort_no</td><td>Ⅰ/Ⅱ/Ⅲ/Ⅳ 级</td></tr>
+      <tr><td><code>event_factor</code></td><td>事件诱因记录表</td><td>factor_id, event_id, dimension, factor_type, factor_content</td><td>五维诱因采集</td></tr>
+      <tr><td><code>rca_record</code></td><td>RCA 根因分析记录表</td><td>rca_id, event_id, analyst_id, timeline, root_human/machine/material/method/env, improvement, analysis_status</td><td>五维根因+改进</td></tr>
+      <tr><td><code>sys_audit_log</code></td><td>系统操作审计日志</td><td>log_id, user_id, username, role, action_type, target_type, target_id, req_param, ip_addr</td><td>全操作留痕</td></tr>
+      <tr><td><code>sys_department</code></td><td>科室字典表</td><td>dept_id, dept_code, dept_name, status</td><td>支撑隔离/统计</td></tr>
+      <tr><td><code>dict_event_type</code></td><td>事件类型字典表</td><td>type_id, type_code, type_name, category</td><td>跌倒/压疮/外渗/坠床等</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><b>交付物：</b>完整 MySQL 8.0 建库脚本已提供，文件路径 <code>nursing-ae-system/sql/01_init.sql</code>，含 9 张表 DDL、外键约束、索引与字典初始化数据。</div>
+
+  <!-- ========== 4 总体方案 ========== -->
+  <h2 class="sec">4. 总体方案</h2>
+  <h3 class="sub">4.1 技术架构</h3>
+  <div class="fig">
+    <svg viewBox="0 0 920 600" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+      <defs><marker id="ad" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#5b6b78"/></marker></defs>
+      <style>
+        .t{fill:#15405f;font-size:19px;font-weight:700;}
+        .band{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.6;}
+        .bandh{fill:#1f5f8b;}
+        .bandht{fill:#ffffff;font-size:14px;font-weight:700;}
+        .tech{fill:#15405f;font-size:12.5px;}
+        .ln{stroke:#7c8b98;stroke-width:1.6;fill:none;marker-end:url(#ad);}
+        .side{fill:#fff6e6;stroke:#f0c36d;stroke-width:1.6;}
+        .sidet{fill:#a45c00;font-size:13px;font-weight:700;}
+        .sideb{fill:#a45c00;font-size:11.5px;}
+        .clk{fill:#e8f0f5;stroke:#2e8b9e;stroke-width:1.5;}
+        .clkt{fill:#15405f;font-size:13px;font-weight:600;}
+      </style>
+      <text x="460" y="30" text-anchor="middle" class="t">总体技术架构图（前后端分离 B/S 架构）</text>
+      <rect x="300" y="44" width="320" height="40" rx="8" class="clk"/><text x="460" y="69" text-anchor="middle" class="clkt">浏览器客户端（Web 单页应用）</text>
+      <rect x="120" y="104" width="560" height="62" rx="8" class="band"/><rect x="120" y="104" width="150" height="62" rx="8" class="bandh"/><text x="195" y="140" text-anchor="middle" class="bandht">表现层</text><text x="300" y="132" class="tech">Vue3 + Vite + Element Plus + Pinia + Axios</text><text x="300" y="152" class="tech">ECharts 图表 / 表单必填校验 / 脱敏展示</text>
+      <rect x="120" y="184" width="560" height="62" rx="8" class="band"/><rect x="120" y="184" width="150" height="62" rx="8" class="bandh"/><text x="195" y="220" text-anchor="middle" class="bandht">控制层</text><text x="300" y="212" class="tech">Spring Boot Controller（RESTful API）</text><text x="300" y="232" class="tech">JWT 鉴权 / 参数校验 / 统一响应</text>
+      <rect x="120" y="264" width="560" height="62" rx="8" class="band"/><rect x="120" y="264" width="150" height="62" rx="8" class="bandh"/><text x="195" y="300" text-anchor="middle" class="bandht">业务/安全层</text><text x="300" y="292" class="tech">Service + Spring Security</text><text x="300" y="312" class="tech">RBAC 判定 / 数据范围隔离 / 匿名脱敏 / AOP 审计</text>
+      <rect x="120" y="344" width="560" height="62" rx="8" class="band"/><rect x="120" y="344" width="150" height="62" rx="8" class="bandh"/><text x="195" y="380" text-anchor="middle" class="bandht">持久层</text><text x="300" y="372" class="tech">MyBatis-Plus</text><text x="300" y="392" class="tech">表映射 / 分页 / 条件构造器</text>
+      <rect x="120" y="424" width="560" height="62" rx="8" class="band"/><rect x="120" y="424" width="150" height="62" rx="8" class="bandh"/><text x="195" y="460" text-anchor="middle" class="bandht">存储层</text><text x="300" y="452" class="tech">MySQL 8.0</text><text x="300" y="472" class="tech">9 张表：用户/患者/事件主表/分级字典/诱因/RCA/审计/科室/类型字典</text>
+      <rect x="700" y="104" width="200" height="382" rx="10" class="side"/><text x="800" y="132" text-anchor="middle" class="sidet">横切关注点</text><text x="800" y="166" text-anchor="middle" class="sideb">安全与审计（贯穿全层）</text><text x="800" y="212" text-anchor="middle" class="sideb">· 身份认证 JWT</text><text x="800" y="248" text-anchor="middle" class="sideb">· 角色权限 RBAC</text><text x="800" y="284" text-anchor="middle" class="sideb">· 数据范围隔离</text><text x="800" y="320" text-anchor="middle" class="sideb">· 匿名上报通道</text><text x="800" y="356" text-anchor="middle" class="sideb">· 患者信息脱敏</text><text x="800" y="392" text-anchor="middle" class="sideb">· AOP 全操作审计</text><text x="800" y="428" text-anchor="middle" class="sideb">· 防越权/防篡改</text>
+      <path d="M460,84 L460,104" class="ln"/><path d="M400,166 L400,184" class="ln"/><path d="M400,246 L400,264" class="ln"/><path d="M400,326 L400,344" class="ln"/><path d="M400,406 L400,424" class="ln"/>
+    </svg>
+    <div class="figcap">图 4-1 总体技术架构图（五层 + 横切安全审计）</div>
+  </div>
+
+  <h3 class="sub">4.2 技术栈选型</h3>
+  <table>
+    <thead><tr><th>维度</th><th>选型</th><th>理由</th></tr></thead>
+    <tbody>
+      <tr><td>前端</td><td>Vue3 + Vite + Element Plus + Pinia + Axios</td><td>组件化表单、易做必填校验与脱敏展示</td></tr>
+      <tr><td>图表</td><td>ECharts</td><td>各科室/类型柱状图、损伤等级饼图、时间趋势折线</td></tr>
+      <tr><td>后端</td><td>Spring Boot 3 + MyBatis-Plus</td><td>贴合课程 Java 技术栈，便于权限/审计实践</td></tr>
+      <tr><td>安全</td><td>Spring Security + JWT</td><td>无状态鉴权、角色与数据范围控制</td></tr>
+      <tr><td>数据库</td><td>MySQL 8.0</td><td>成熟稳定，支持外键/索引</td></tr>
+      <tr><td>审计</td><td>Spring AOP / 拦截器</td><td>统一记录操作日志</td></tr>
+    </tbody>
+  </table>
+  <div class="callout"><b>备选方案：</b>若追求极简部署，可降为 Flask + SQLite + 原生前端；若仅做界面原型，可用纯前端 + Mock 数据。本方案以 Spring Boot + Vue3 为主推，工程实践价值最高。</div>
+
+  <h3 class="sub">4.3 权限与安全设计</h3>
+  <ul>
+    <li><strong>RBAC 角色：</strong><code>NURSE / HEAD_NURSE / ADMIN</code>，权限码控制菜单与接口；</li>
+    <li><strong>数据范围隔离：</strong>查询自动叠加部门条件——护士仅本人提交及本科室脱敏列表；护士长仅本科室全部；管理员全部；</li>
+    <li><strong>匿名上报：</strong>前端勾选"匿名"→ 后端 <code>reporter_id=NULL</code>，审计以 <code>ANONYMOUS</code> 记录，无任何身份关联；</li>
+    <li><strong>脱敏展示：</strong>患者姓名/证件号/住院号脱敏存储与列表脱敏；明细页按角色授权展示；</li>
+    <li><strong>审计全留痕：</strong>AOP 拦截填报/查看/修改/删除/导出，写入 <code>sys_audit_log</code>，敏感参数脱敏。</li>
+  </ul>
+
+  <h3 class="sub">4.4 RCA 辅助分析与统计方案</h3>
+  <ul>
+    <li><strong>RCA 实现：</strong>人/机/料/法/环 五维文本域 + 时间序列表 + ECharts 鱼骨图；状态机 NOT_STARTED→ANALYZING→DONE；数据写入 <code>event_factor</code> 与 <code>rca_record</code>。</li>
+    <li><strong>统计图表：</strong>柱状图（科室×类型）、饼图（损伤等级分布）、折线图（月度趋势）、词云（高频诱因），定位高频安全问题并支持导出。</li>
+  </ul>
+
+  <div class="foot">
+    <p>本文件为《住院护理不良事件上报与根因辅助分析原型系统》第二阶段交付：需求分析、业务流程图、E-R 图、总体方案与数据库设计（V1.0）。</p>
+    <p>⚠ 系统仅用于教学模拟，不连接真实临床数据，不用于临床诊断或诊疗决策。</p>
+  </div>
+
+</div>
+</body>
+</html>

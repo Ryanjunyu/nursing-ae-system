@@ -1,0 +1,66 @@
+<svg viewBox="0 0 880 740" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+  <defs>
+    <marker id="ar2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6b78"/>
+    </marker>
+  </defs>
+  <style>
+    .t{fill:#15405f;font-size:19px;font-weight:700;}
+    .n{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.6;}
+    .nt{fill:#15405f;font-size:14px;}
+    .dim{fill:#e8f0f5;stroke:#2e8b9e;stroke-width:1.6;}
+    .dimt{fill:#15405f;font-size:15px;font-weight:600;}
+    .dimd{fill:#5b6b78;font-size:11px;}
+    .ln{stroke:#7c8b98;stroke-width:1.6;fill:none;marker-end:url(#ar2);}
+    .note{fill:#fbfdfe;stroke:#2e8b9e;stroke-width:1.4;}
+    .notet{fill:#23303a;font-size:12.5px;}
+    .st{fill:#fff6e6;stroke:#f0c36d;stroke-width:1.6;}
+    .stt{fill:#a45c00;font-size:13px;font-weight:600;}
+  </style>
+
+  <text x="440" y="30" text-anchor="middle" class="t">业务流程图 2：RCA 五维根因辅助分析流程</text>
+
+  <rect x="220" y="48" width="440" height="46" rx="8" class="n"/>
+  <text x="440" y="76" text-anchor="middle" class="nt">【护士长/管理员】从事件列表选择目标事件</text>
+
+  <rect x="240" y="124" width="400" height="46" rx="8" class="n"/>
+  <text x="440" y="152" text-anchor="middle" class="nt">进入 RCA 五维填报模板</text>
+
+  <!-- 五维 -->
+  <rect x="40" y="196" width="150" height="58" rx="8" class="dim"/><text x="115" y="222" text-anchor="middle" class="dimt">人</text><text x="115" y="240" text-anchor="middle" class="dimd">人员因素</text>
+  <rect x="208" y="196" width="150" height="58" rx="8" class="dim"/><text x="283" y="222" text-anchor="middle" class="dimt">机</text><text x="283" y="240" text-anchor="middle" class="dimd">设备因素</text>
+  <rect x="376" y="196" width="150" height="58" rx="8" class="dim"/><text x="451" y="222" text-anchor="middle" class="dimt">料</text><text x="451" y="240" text-anchor="middle" class="dimd">物料因素</text>
+  <rect x="544" y="196" width="150" height="58" rx="8" class="dim"/><text x="619" y="222" text-anchor="middle" class="dimt">法</text><text x="619" y="240" text-anchor="middle" class="dimd">方法/制度</text>
+  <rect x="712" y="196" width="128" height="58" rx="8" class="dim"/><text x="776" y="222" text-anchor="middle" class="dimt">环</text><text x="776" y="240" text-anchor="middle" class="dimd">环境因素</text>
+
+  <rect x="220" y="288" width="440" height="46" rx="8" class="n"/>
+  <text x="440" y="316" text-anchor="middle" class="nt">汇总五维诱因 → 写入 event_factor（事件诱因记录表）</text>
+
+  <rect x="220" y="364" width="440" height="46" rx="8" class="n"/>
+  <text x="440" y="392" text-anchor="middle" class="nt">填写时间序列表（结构化还原事件经过）</text>
+
+  <rect x="220" y="440" width="440" height="46" rx="8" class="n"/>
+  <text x="440" y="468" text-anchor="middle" class="nt">基于五维数据生成鱼骨图（ECharts 可视化）</text>
+
+  <rect x="220" y="516" width="440" height="46" rx="8" class="n"/>
+  <text x="440" y="544" text-anchor="middle" class="nt">制定改进措施 → 写入 rca_record（根因 + 改进）</text>
+
+  <rect x="220" y="592" width="440" height="46" rx="8" class="st"/>
+  <text x="440" y="620" text-anchor="middle" class="stt">分析状态机：NOT_STARTED → ANALYZING → DONE</text>
+
+  <rect x="220" y="668" width="440" height="46" rx="8" class="n"/>
+  <text x="440" y="696" text-anchor="middle" class="nt">纳入统计分析 / 持续改进闭环</text>
+
+  <path d="M440,94 L440,124" class="ln"/>
+  <path d="M115,254 L440,288" class="ln"/>
+  <path d="M283,254 L440,288" class="ln"/>
+  <path d="M451,254 L440,288" class="ln"/>
+  <path d="M619,254 L440,288" class="ln"/>
+  <path d="M776,254 L440,288" class="ln"/>
+  <path d="M440,170 L440,196" class="ln"/>
+  <path d="M440,334 L440,364" class="ln"/>
+  <path d="M440,410 L440,440" class="ln"/>
+  <path d="M440,486 L440,516" class="ln"/>
+  <path d="M440,562 L440,592" class="ln"/>
+  <path d="M440,638 L440,668" class="ln"/>
+</svg>

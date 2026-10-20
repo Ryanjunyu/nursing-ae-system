@@ -1,0 +1,83 @@
+<svg viewBox="0 0 1000 640" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+  <style>
+    .t{fill:#15405f;font-size:20px;font-weight:700;}
+    .lab{fill:#23303a;font-size:14px;}
+    .uc{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.6;}
+    .uclab{fill:#15405f;font-size:13px;text-anchor:middle;}
+    .actor{fill:none;stroke:#2e8b9e;stroke-width:2.6;}
+    .arole{fill:#15405f;font-size:14px;font-weight:600;text-anchor:middle;}
+    .ln{stroke:#7c8b98;stroke-width:1.4;fill:none;}
+    .dln{stroke:#7c8b98;stroke-width:1.2;fill:none;stroke-dasharray:5 4;}
+    .sys{fill:none;stroke:#1f5f8b;stroke-width:1.8;stroke-dasharray:7 5;}
+    .syslab{fill:#1f5f8b;font-size:14px;font-weight:600;}
+  </style>
+
+  <text x="500" y="34" text-anchor="middle" class="t">用例图：住院护理不良事件上报与 RCA 辅助分析系统</text>
+
+  <!-- 系统边界 -->
+  <rect x="300" y="66" width="660" height="540" rx="10" class="sys"/>
+  <text x="630" y="90" text-anchor="middle" class="syslab">住院护理不良事件上报与 RCA 辅助分析系统</text>
+
+  <!-- 参与者（左侧） -->
+  <g transform="translate(120,150)">
+    <circle cx="0" cy="-24" r="11" class="actor"/>
+    <line x1="0" y1="-13" x2="0" y2="10" class="actor"/>
+    <line x1="-14" y1="-4" x2="14" y2="-4" class="actor"/>
+    <line x1="0" y1="10" x2="-14" y2="30" class="actor"/>
+    <line x1="0" y1="10" x2="14" y2="30" class="actor"/>
+    <text x="0" y="52" class="arole">普通护士</text>
+    <text x="0" y="70" class="arole" style="fill:#5b6b78;font-weight:400;font-size:12px;">NURSE</text>
+  </g>
+  <g transform="translate(120,350)">
+    <circle cx="0" cy="-24" r="11" class="actor"/>
+    <line x1="0" y1="-13" x2="0" y2="10" class="actor"/>
+    <line x1="-14" y1="-4" x2="14" y2="-4" class="actor"/>
+    <line x1="0" y1="10" x2="-14" y2="30" class="actor"/>
+    <line x1="0" y1="10" x2="14" y2="30" class="actor"/>
+    <text x="0" y="52" class="arole">科室护士长</text>
+    <text x="0" y="70" class="arole" style="fill:#5b6b78;font-weight:400;font-size:12px;">HEAD_NURSE</text>
+  </g>
+  <g transform="translate(120,540)">
+    <circle cx="0" cy="-24" r="11" class="actor"/>
+    <line x1="0" y1="-13" x2="0" y2="10" class="actor"/>
+    <line x1="-14" y1="-4" x2="14" y2="-4" class="actor"/>
+    <line x1="0" y1="10" x2="-14" y2="30" class="actor"/>
+    <line x1="0" y1="10" x2="14" y2="30" class="actor"/>
+    <text x="0" y="52" class="arole">系统管理员</text>
+    <text x="0" y="70" class="arole" style="fill:#5b6b78;font-weight:400;font-size:12px;">ADMIN</text>
+  </g>
+
+  <!-- 用例（椭圆） -->
+  <ellipse cx="430" cy="120" rx="92" ry="27" class="uc"/><text x="430" y="125" class="uclab">填报不良事件</text>
+  <ellipse cx="430" cy="180" rx="78" ry="27" class="uc"/><text x="430" y="185" class="uclab">选择匿名上报</text>
+  <ellipse cx="445" cy="246" rx="112" ry="27" class="uc"/><text x="445" y="251" class="uclab">查看本人/本科室脱敏列表</text>
+  <ellipse cx="740" cy="150" rx="98" ry="27" class="uc"/><text x="740" y="155" class="uclab">填写 RCA 五维分析</text>
+  <ellipse cx="740" cy="216" rx="98" ry="27" class="uc"/><text x="740" y="221" class="uclab">查看本科室全部事件</text>
+  <ellipse cx="740" cy="282" rx="92" ry="27" class="uc"/><text x="740" y="287" class="uclab">检索筛选(本科室)</text>
+  <ellipse cx="430" cy="360" rx="92" ry="27" class="uc"/><text x="430" y="365" class="uclab">用户与角色管理</text>
+  <ellipse cx="430" cy="420" rx="80" ry="27" class="uc"/><text x="430" y="425" class="uclab">维护字典数据</text>
+  <ellipse cx="740" cy="360" rx="92" ry="27" class="uc"/><text x="740" y="365" class="uclab">查看全部事件</text>
+  <ellipse cx="740" cy="426" rx="80" ry="27" class="uc"/><text x="740" y="431" class="uclab">全量统计分析</text>
+  <ellipse cx="740" cy="492" rx="92" ry="27" class="uc"/><text x="740" y="497" class="uclab">审计日志查看</text>
+  <ellipse cx="740" cy="558" rx="92" ry="27" class="uc"/><text x="740" y="563" class="uclab">检索筛选(全部)</text>
+
+  <!-- 连线 -->
+  <path d="M131,162 C260,162 320,130 338,124" class="ln"/>
+  <path d="M131,162 C260,162 352,184 352,180" class="ln"/>
+  <path d="M131,162 C260,162 333,248 333,246" class="ln"/>
+  <path d="M131,162 C300,170 620,150 642,150" class="ln"/>
+  <path d="M150,360 C300,300 620,216 642,216" class="ln"/>
+  <path d="M150,360 C300,300 648,282 648,282" class="ln"/>
+  <path d="M150,360 C300,300 642,150 642,150" class="ln"/>
+  <path d="M131,540 C260,540 338,360 338,360" class="ln"/>
+  <path d="M131,540 C260,540 350,420 350,420" class="ln"/>
+  <path d="M150,540 C320,440 648,360 648,360" class="ln"/>
+  <path d="M150,540 C320,470 660,426 660,426" class="ln"/>
+  <path d="M150,540 C320,500 648,492 648,492" class="ln"/>
+  <path d="M150,540 C320,540 648,558 648,558" class="ln"/>
+  <!-- 包含/扩展 -->
+  <path d="M430,147 C430,160 430,153 430,153" class="dln"/>
+  <path d="M522,120 C600,120 680,150 642,150" class="dln"/>
+  <text x="582" y="116" style="fill:#5b6b78;font-size:11px;">&lt;&lt;include&gt;&gt;</text>
+  <path d="M740,243 C740,260 740,255 740,255" class="dln"/>
+</svg>

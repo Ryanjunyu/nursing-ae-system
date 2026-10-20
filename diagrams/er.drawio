@@ -1,0 +1,109 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="Y58OBS1ap-d0ekgQZwmC" name="第 1 页">
+    <mxGraphModel dx="1263" dy="910" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1140" pageHeight="780" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;fontSize=19;fontStyle=1;fontColor=#15405f;align=center;verticalAlign=middle;" value="E-R 图：住院护理不良事件上报与 RCA 辅助分析系统（9 张表）" vertex="1">
+          <mxGeometry height="34" width="900" x="120" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="dept" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf3f7;strokeColor=#1f5f8b;fontColor=#15405f;fontSize=12;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;科室字典 sys_department&lt;/b&gt;&lt;br&gt;dept_id / dept_code / dept_name / status" vertex="1">
+          <mxGeometry height="64" width="210" x="290" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="user" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf3f7;strokeColor=#1f5f8b;fontColor=#15405f;fontSize=12;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;系统用户 sys_user&lt;/b&gt;&lt;br&gt;user_id / username / password&lt;br&gt;role / dept_id / status" vertex="1">
+          <mxGeometry height="66" width="210" x="60" y="160" as="geometry" />
+        </mxCell>
+        <mxCell id="patient" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf3f7;strokeColor=#1f5f8b;fontColor=#15405f;fontSize=12;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;模拟患者 patient&lt;/b&gt;&lt;br&gt;patient_id / masked_name / gender&lt;br&gt;age / bed_no / id_no_masked（脱敏）" vertex="1">
+          <mxGeometry height="66" width="210" x="700" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="injury" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf3f7;strokeColor=#1f5f8b;fontColor=#15405f;fontSize=12;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;损伤分级字典 dict_injury_level&lt;/b&gt;&lt;br&gt;level_code / level_name / level_desc&lt;br&gt;Ⅰ/Ⅱ/Ⅲ/Ⅳ 级" vertex="1">
+          <mxGeometry height="64" width="210" x="110" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="etype" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf3f7;strokeColor=#1f5f8b;fontColor=#15405f;fontSize=12;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;事件类型字典 dict_event_type&lt;/b&gt;&lt;br&gt;type_id / type_code / type_name&lt;br&gt;category（跌倒/压疮/外渗…）" vertex="1">
+          <mxGeometry height="64" width="210" x="810" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="factor" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf3f7;strokeColor=#1f5f8b;fontColor=#15405f;fontSize=12;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;事件诱因记录 event_factor&lt;/b&gt;&lt;br&gt;factor_id / event_id / dimension&lt;br&gt;人/机/料/法/环 + content" vertex="1">
+          <mxGeometry height="64" width="210" x="150" y="558" as="geometry" />
+        </mxCell>
+        <mxCell id="rca" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf3f7;strokeColor=#1f5f8b;fontColor=#15405f;fontSize=12;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;RCA 根因分析 rca_record&lt;/b&gt;&lt;br&gt;rca_id / event_id / analyst_id&lt;br&gt;root_* / improvement / status" vertex="1">
+          <mxGeometry height="64" width="210" x="400" y="558" as="geometry" />
+        </mxCell>
+        <mxCell id="audit" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf3f7;strokeColor=#1f5f8b;fontColor=#15405f;fontSize=12;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;审计日志 sys_audit_log&lt;/b&gt;&lt;br&gt;log_id / user_id / action_type&lt;br&gt;target / req_param / ip_addr" vertex="1">
+          <mxGeometry height="64" width="210" x="700" y="558" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="dept" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7c8b98;fontColor=#5b6b78;fontSize=11;" target="user" value="1 : N 归属科室">
+          <mxGeometry relative="1" x="-0.2926" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="dept" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7c8b98;fontColor=#5b6b78;fontSize=11;" target="patient" value="1 : N 所属科室">
+          <mxGeometry relative="1" x="-0.4015" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="dept" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7c8b98;fontColor=#5b6b78;fontSize=11;" target="event" value="1 : N 发生科室">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="user" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7c8b98;fontColor=#5b6b78;fontSize=11;" target="event" value="1 : N 上报人">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="patient" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7c8b98;fontColor=#5b6b78;fontSize=11;" target="event" value="1 : N 患者">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="injury" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7c8b98;fontColor=#5b6b78;fontSize=11;" target="event" value="1 : N 损伤分级">
+          <mxGeometry relative="1" x="-0.2195" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="etype" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7c8b98;fontColor=#5b6b78;fontSize=11;" target="event" value="1 : N 事件类型">
+          <mxGeometry relative="1" x="-0.0024" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="event" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7c8b98;fontColor=#5b6b78;fontSize=11;" target="factor" value="1 : N 诱因">
+          <mxGeometry relative="1" x="0.4825" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="80" y="322" />
+              <mxPoint x="80" y="590" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="event" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7c8b98;fontColor=#5b6b78;fontSize=11;" target="rca" value="1 : N 根因">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="user" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7c8b98;fontColor=#5b6b78;fontSize=11;" target="rca" value="1 : N 分析人">
+          <mxGeometry relative="1" x="-0.1888" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="650" y="221" />
+              <mxPoint x="650" y="590" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7c8b98;fontColor=#5b6b78;fontSize=11;" value="1 : N 操作人">
+          <mxGeometry relative="1" x="-0.4102" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="795" y="380" />
+            </Array>
+            <mxPoint x="600" y="380.0000000000002" as="sourcePoint" />
+            <mxPoint x="795" y="558.0000000000002" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fdnZCq4Vhd7lGqYghAJb-1" edge="1" parent="1" source="user" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;strokeColor=#7c8b98;fontColor=#5b6b78;fontSize=11;" target="event" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="165" y="380" />
+            </Array>
+            <mxPoint x="165" y="254" as="sourcePoint" />
+            <mxPoint x="805" y="558" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="event" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eaf3f7;strokeColor=#1f5f8b;strokeWidth=3;fontColor=#15405f;fontSize=12;verticalAlign=top;spacingTop=6;" value="&lt;b&gt;不良事件主表 adverse_event&lt;/b&gt;&lt;br&gt;event_id / event_no / reporter_id&lt;br&gt;is_anonymous / dept_id / patient_id" vertex="1">
+          <mxGeometry height="68" width="210" x="400" y="332" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

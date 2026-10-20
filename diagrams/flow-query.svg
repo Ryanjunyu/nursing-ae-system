@@ -1,0 +1,69 @@
+<svg viewBox="0 0 900 760" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+  <defs>
+    <marker id="ar3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6b78"/>
+    </marker>
+  </defs>
+  <style>
+    .t{fill:#15405f;font-size:19px;font-weight:700;}
+    .n{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.6;}
+    .nt{fill:#15405f;font-size:14px;}
+    .ln{stroke:#7c8b98;stroke-width:1.6;fill:none;marker-end:url(#ar3);}
+    .scope{fill:#e8f0f5;stroke:#2e8b9e;stroke-width:1.5;}
+    .scopet{fill:#15405f;font-size:13px;}
+    .scoped{fill:#5b6b78;font-size:11.5px;}
+    .note{fill:#fbfdfe;stroke:#2e8b9e;stroke-width:1.4;}
+    .notet{fill:#23303a;font-size:12.5px;}
+  </style>
+
+  <text x="450" y="30" text-anchor="middle" class="t">业务流程图 3：事件检索 / 统计 + 权限隔离流程</text>
+
+  <rect x="250" y="48" width="400" height="46" rx="8" class="n"/>
+  <text x="450" y="76" text-anchor="middle" class="nt">用户登录（携带 role）</text>
+
+  <rect x="220" y="124" width="460" height="46" rx="8" class="n"/>
+  <text x="450" y="152" text-anchor="middle" class="nt">选择筛选条件：科室 / 类型 / 损伤等级 / 时间区间</text>
+
+  <rect x="240" y="200" width="420" height="46" rx="8" class="n"/>
+  <text x="450" y="228" text-anchor="middle" class="nt">【系统】按角色叠加数据范围隔离</text>
+
+  <!-- 三种范围 -->
+  <rect x="50" y="276" width="240" height="62" rx="8" class="scope"/>
+  <text x="170" y="300" text-anchor="middle" class="scopet">护士 NURSE</text>
+  <text x="170" y="320" text-anchor="middle" class="scoped">本人提交 + 本科室脱敏列表</text>
+  <rect x="330" y="276" width="240" height="62" rx="8" class="scope"/>
+  <text x="450" y="300" text-anchor="middle" class="scopet">护士长 HEAD_NURSE</text>
+  <text x="450" y="320" text-anchor="middle" class="scoped">仅本科室全部事件</text>
+  <rect x="610" y="276" width="240" height="62" rx="8" class="scope"/>
+  <text x="730" y="300" text-anchor="middle" class="scopet">管理员 ADMIN</text>
+  <text x="730" y="320" text-anchor="middle" class="scoped">全部事件（全科室）</text>
+
+  <!-- 汇聚 -->
+  <rect x="250" y="372" width="400" height="46" rx="8" class="n"/>
+  <text x="450" y="400" text-anchor="middle" class="nt">执行查询（MyBatis-Plus 条件构造）</text>
+
+  <rect x="220" y="448" width="460" height="46" rx="8" class="n"/>
+  <text x="450" y="476" text-anchor="middle" class="nt">返回脱敏事件列表（患者姓名/证件号/住院号脱敏）</text>
+
+  <rect x="280" y="524" width="340" height="46" rx="8" class="n"/>
+  <text x="450" y="552" text-anchor="middle" class="nt">点击「统计分析」</text>
+
+  <rect x="200" y="600" width="500" height="46" rx="8" class="n"/>
+  <text x="450" y="628" text-anchor="middle" class="nt">多维聚合 + ECharts：科室×类型 / 等级分布 / 趋势 / 诱因词云</text>
+
+  <rect x="300" y="676" width="300" height="46" rx="8" class="n"/>
+  <text x="450" y="704" text-anchor="middle" class="nt">输出图表 / 支持导出统计结果</text>
+
+  <path d="M450,94 L450,124" class="ln"/>
+  <path d="M450,170 L450,200" class="ln"/>
+  <path d="M260,246 L170,276" class="ln"/>
+  <path d="M450,246 L450,276" class="ln"/>
+  <path d="M640,246 L730,276" class="ln"/>
+  <path d="M170,338 L450,372" class="ln"/>
+  <path d="M450,338 L450,372" class="ln"/>
+  <path d="M730,338 L450,372" class="ln"/>
+  <path d="M450,418 L450,448" class="ln"/>
+  <path d="M450,494 L450,524" class="ln"/>
+  <path d="M450,570 L450,600" class="ln"/>
+  <path d="M450,646 L450,676" class="ln"/>
+</svg>

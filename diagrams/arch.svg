@@ -1,0 +1,71 @@
+<svg viewBox="0 0 920 600" xmlns="http://www.w3.org/2000/svg" font-family="Microsoft YaHei, PingFang SC, sans-serif">
+  <defs>
+    <marker id="ad" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5b6b78"/>
+    </marker>
+  </defs>
+  <style>
+    .t{fill:#15405f;font-size:19px;font-weight:700;}
+    .band{fill:#eaf3f7;stroke:#1f5f8b;stroke-width:1.6;}
+    .bandh{fill:#1f5f8b;}
+    .bandht{fill:#ffffff;font-size:14px;font-weight:700;}
+    .tech{fill:#15405f;font-size:12.5px;}
+    .ln{stroke:#7c8b98;stroke-width:1.6;fill:none;marker-end:url(#ad);}
+    .side{fill:#fff6e6;stroke:#f0c36d;stroke-width:1.6;}
+    .sidet{fill:#a45c00;font-size:13px;font-weight:700;}
+    .sideb{fill:#a45c00;font-size:11.5px;}
+    .clk{fill:#e8f0f5;stroke:#2e8b9e;stroke-width:1.5;}
+    .clkt{fill:#15405f;font-size:13px;font-weight:600;}
+  </style>
+
+  <text x="460" y="30" text-anchor="middle" class="t">总体技术架构图（前后端分离 B/S 架构）</text>
+
+  <!-- 客户端 -->
+  <rect x="300" y="44" width="320" height="40" rx="8" class="clk"/>
+  <text x="460" y="69" text-anchor="middle" class="clkt">浏览器客户端（Web 单页应用）</text>
+
+  <!-- 各层 -->
+  <rect x="120" y="104" width="560" height="62" rx="8" class="band"/>
+  <rect x="120" y="104" width="150" height="62" rx="8" class="bandh"/><text x="195" y="140" text-anchor="middle" class="bandht">表现层</text>
+  <text x="300" y="132" class="tech">Vue3 + Vite + Element Plus + Pinia + Axios</text>
+  <text x="300" y="152" class="tech">ECharts 图表 / 表单必填校验 / 脱敏展示</text>
+
+  <rect x="120" y="184" width="560" height="62" rx="8" class="band"/>
+  <rect x="120" y="184" width="150" height="62" rx="8" class="bandh"/><text x="195" y="220" text-anchor="middle" class="bandht">控制层</text>
+  <text x="300" y="212" class="tech">Spring Boot Controller（RESTful API）</text>
+  <text x="300" y="232" class="tech">JWT 鉴权 / 参数校验 / 统一响应</text>
+
+  <rect x="120" y="264" width="560" height="62" rx="8" class="band"/>
+  <rect x="120" y="264" width="150" height="62" rx="8" class="bandh"/><text x="195" y="300" text-anchor="middle" class="bandht">业务/安全层</text>
+  <text x="300" y="292" class="tech">Service + Spring Security</text>
+  <text x="300" y="312" class="tech">RBAC 判定 / 数据范围隔离 / 匿名脱敏 / AOP 审计</text>
+
+  <rect x="120" y="344" width="560" height="62" rx="8" class="band"/>
+  <rect x="120" y="344" width="150" height="62" rx="8" class="bandh"/><text x="195" y="380" text-anchor="middle" class="bandht">持久层</text>
+  <text x="300" y="372" class="tech">MyBatis-Plus</text>
+  <text x="300" y="392" class="tech">表映射 / 分页 / 条件构造器</text>
+
+  <rect x="120" y="424" width="560" height="62" rx="8" class="band"/>
+  <rect x="120" y="424" width="150" height="62" rx="8" class="bandh"/><text x="195" y="460" text-anchor="middle" class="bandht">存储层</text>
+  <text x="300" y="452" class="tech">MySQL 8.0</text>
+  <text x="300" y="472" class="tech">9 张表：用户/患者/事件主表/分级字典/诱因/RCA/审计/科室/类型字典</text>
+
+  <!-- 横切：安全与审计 -->
+  <rect x="700" y="104" width="200" height="382" rx="10" class="side"/>
+  <text x="800" y="132" text-anchor="middle" class="sidet">横切关注点</text>
+  <text x="800" y="166" text-anchor="middle" class="sideb">安全与审计（贯穿全层）</text>
+  <text x="800" y="212" text-anchor="middle" class="sideb">· 身份认证 JWT</text>
+  <text x="800" y="248" text-anchor="middle" class="sideb">· 角色权限 RBAC</text>
+  <text x="800" y="284" text-anchor="middle" class="sideb">· 数据范围隔离</text>
+  <text x="800" y="320" text-anchor="middle" class="sideb">· 匿名上报通道</text>
+  <text x="800" y="356" text-anchor="middle" class="sideb">· 患者信息脱敏</text>
+  <text x="800" y="392" text-anchor="middle" class="sideb">· AOP 全操作审计</text>
+  <text x="800" y="428" text-anchor="middle" class="sideb">· 防越权/防篡改</text>
+
+  <!-- 层间箭头 -->
+  <path d="M460,84 L460,104" class="ln"/>
+  <path d="M400,166 L400,184" class="ln"/>
+  <path d="M400,246 L400,264" class="ln"/>
+  <path d="M400,326 L400,344" class="ln"/>
+  <path d="M400,406 L400,424" class="ln"/>
+</svg>

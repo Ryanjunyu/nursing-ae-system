@@ -1,0 +1,42 @@
+* { box-sizing: border-box; }
+html, body, #app { height: 100%; margin: 0; }
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  background: #f0f2f5;
+  color: #303133;
+}
+.login-wrap {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #1d6fb8 0%, #2a8c5a 100%);
+}
+.login-card {
+  width: 380px;
+  padding: 8px 12px;
+}
+.login-card h2 {
+  text-align: center;
+  font-size: 18px;
+  color: #1d6fb8;
+  margin: 6px 0 18px;
+}
+.login-card .hint {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #909399;
+  text-align: center;
+}
+.app-container { height: 100%; }
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #1d6fb8;
+  color: #fff;
+}
+.app-header .logo { font-size: 17px; font-weight: 600; }
+.app-header .user { display: flex; align-items: center; gap: 12px; }
+.app-header .user span { font-size: 14px; }
+.page-title { margin: 0 0 16px; font-size: 18px; }
