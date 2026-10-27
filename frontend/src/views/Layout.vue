@@ -19,6 +19,12 @@
           <el-menu-item index="/rca">
             <el-icon><Connection /></el-icon><span>RCA 根因分析</span>
           </el-menu-item>
+          <el-menu-item index="/statistics">
+            <el-icon><DataAnalysis /></el-icon><span>统计分析</span>
+          </el-menu-item>
+          <el-menu-item v-if="isAdmin" index="/users">
+            <el-icon><User /></el-icon><span>用户管理</span>
+          </el-menu-item>
         </el-menu>
       </el-aside>
       <el-main>
@@ -40,6 +46,7 @@ const activeMenu = computed(() => route.path)
 
 const roleMap = { ADMIN: '系统管理员', HEAD_NURSE: '护士长', NURSE: '护士' }
 const roleText = computed(() => (user ? roleMap[user.role] || user.role : ''))
+const isAdmin = computed(() => user && user.role === 'ADMIN')
 
 function logout() {
   auth.clear()

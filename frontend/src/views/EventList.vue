@@ -3,10 +3,13 @@
     <h3 class="page-title">事件查询</h3>
     <el-card>
       <el-form :inline="true" :model="query" @submit.prevent>
-        <el-form-item label="科室">
+        <el-form-item v-if="isAdmin" label="科室">
           <el-select v-model="query.deptId" clearable placeholder="全部" style="width:150px">
             <el-option v-for="d in departments" :key="d.deptId" :label="d.deptName" :value="d.deptId" />
           </el-select>
+        </el-form-item>
+        <el-form-item v-else label="数据范围">
+          <el-tag type="info">仅本科室</el-tag>
         </el-form-item>
         <el-form-item label="事件类型">
           <el-select v-model="query.eventType" clearable placeholder="全部" style="width:150px">
@@ -17,6 +20,10 @@
           <el-select v-model="query.injuryLevel" clearable placeholder="全部" style="width:170px">
             <el-option v-for="l in injuryLevels" :key="l.levelCode" :label="l.levelName" :value="l.levelCode" />
           </el-select>
+        </el-form-item>
+        <el-form-item label="时间区间">
+          <el-date-picker v-model="dateRange" type="daterange" value-format="YYYY-MM-DD"
+            start-placeholder="开始日期" end-placeholder="结束日期" style="width:250px" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="load(1)">查询</el-button>
@@ -75,8 +82,12 @@ import { reactive, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getDepartments, getEventTypes, getInjuryLevels } from '../api/dict'
 import { listEvents, getEvent } from '../api/event'
+import { auth } from '../store/auth'
 
 const router = useRouter()
+const user = auth.getUser()
+const isAdmin = user && user.role === 'ADMIN'
+const dateRange = ref([])
 
 const departments = ref([])
 const eventTypes = ref([])
@@ -102,6 +113,8 @@ onMounted(async () => {
 
 async function load(page) {
   query.page = page || query.page
+  query.startTime = dateRange.value && dateRange.value[0] ? dateRange.value[0] + ' 00:00:00' : ''
+  query.endTime = dateRange.value && dateRange.value[1] ? dateRange.value[1] + ' 23:59:59' : ''
   loading.value = true
   try {
     const res = await listEvents(query)
@@ -116,6 +129,7 @@ function resetQuery() {
   query.deptId = null
   query.eventType = ''
   query.injuryLevel = ''
+  dateRange.value = []
   load(1)
 }
 

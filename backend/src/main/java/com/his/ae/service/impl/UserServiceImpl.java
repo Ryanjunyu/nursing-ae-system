@@ -12,10 +12,12 @@ import com.his.ae.security.LoginUser;
 import com.his.ae.service.UserService;
 import com.his.ae.vo.LoginVO;
 import com.his.ae.vo.UserInfoVO;
+import com.his.ae.vo.UserSaveVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -73,6 +75,63 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectList(qw).stream().map(this::toVO).toList();
     }
 
+    @Override
+    @com.his.ae.annotation.Audit(actionType = "CREATE", targetType = "用户")
+    public Integer createUser(UserSaveVO vo) {
+        assertAdmin();
+        if (vo.getPassword() == null || vo.getPassword().isBlank()) {
+            throw new BizException(400, "新增用户必须设置初始密码");
+        }
+        Long exists = userMapper.selectCount(new QueryWrapper<SysUser>().eq("username", vo.getUsername()));
+        if (exists != null && exists > 0) {
+            throw new BizException(400, "用户名已存在");
+        }
+        SysUser u = new SysUser();
+        u.setUsername(vo.getUsername());
+        u.setPassword(passwordEncoder.encode(vo.getPassword()));
+        u.setRealName(vo.getRealName());
+        u.setRole(vo.getRole());
+        u.setDeptId(vo.getDeptId());
+        u.setPhone(vo.getPhone());
+        u.setStatus(vo.getStatus() == null ? 1 : vo.getStatus());
+        u.setCreateTime(LocalDateTime.now());
+        userMapper.insert(u);
+        return u.getUserId();
+    }
+
+    @Override
+    @com.his.ae.annotation.Audit(actionType = "UPDATE", targetType = "用户")
+    public void updateUser(Integer userId, UserSaveVO vo) {
+        assertAdmin();
+        SysUser u = userMapper.selectById(userId);
+        if (u == null) {
+            throw new BizException(404, "用户不存在");
+        }
+        u.setRealName(vo.getRealName());
+        u.setRole(vo.getRole());
+        u.setDeptId(vo.getDeptId());
+        u.setPhone(vo.getPhone());
+        if (vo.getStatus() != null) {
+            u.setStatus(vo.getStatus());
+        }
+        // 密码非空则重置
+        if (vo.getPassword() != null && !vo.getPassword().isBlank()) {
+            u.setPassword(passwordEncoder.encode(vo.getPassword()));
+        }
+        userMapper.updateById(u);
+    }
+
+    /** 仅系统管理员可管理用户 */
+    private void assertAdmin() {
+        LoginUser lu = CurrentUserHolder.get();
+        if (lu == null) {
+            throw new BizException(401, "未登录");
+        }
+        if (!"ADMIN".equals(lu.getRole())) {
+            throw new BizException(403, "仅系统管理员可管理用户");
+        }
+    }
+
     private UserInfoVO toVO(SysUser u) {
         if (u == null) {
             return null;
@@ -83,6 +142,8 @@ public class UserServiceImpl implements UserService {
         v.setRealName(u.getRealName());
         v.setRole(u.getRole());
         v.setDeptId(u.getDeptId());
+        v.setPhone(u.getPhone());
+        v.setStatus(u.getStatus());
         if (u.getDeptId() != null) {
             SysDepartment d = deptMapper.selectById(u.getDeptId());
             if (d != null) {

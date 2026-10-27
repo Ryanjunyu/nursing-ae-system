@@ -11,4 +11,6 @@ public class UserInfoVO {
     private String role;          // NURSE / HEAD_NURSE / ADMIN
     private Integer deptId;
     private String deptName;
+    private String phone;
+    private Integer status;       // 1 启用 0 停用
 }
